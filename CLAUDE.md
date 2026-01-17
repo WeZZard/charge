@@ -65,3 +65,102 @@ skill.md → prompts/commands/*.md → prompts/core/*.md → workflow execution
 - Single task output > 4000 tokens: Chunk to file, pass reference
 - Cumulative results > 8000 tokens: Inject summarization task
 - Task count > 10: Add checkpoint summarization
+
+## Prompt Authoring Rules
+
+This section defines conventions for placeholders, variables, and examples in prompt files.
+
+### Placeholder Syntax
+
+FlowIt uses distinct placeholder syntaxes for different purposes:
+
+| Syntax | Purpose | Example |
+| ------ | ------- | ------- |
+| `{placeholder}` | Runtime substitution (filled during execution) | `{workflow-name}`, `{task-id}` |
+| `{{placeholder}}` | Handlebars template rendering | `{{name}}`, `{{#each items}}` |
+| `$.path` | JSONPath for data mapping between tasks | `$.requirements` |
+| `<placeholder>` | User input in command documentation | `<prompt>`, `<id>` |
+
+### JSON Type Placeholders
+
+When documenting JSON data formats, use these type placeholders instead of mock data:
+
+| Syntax | Purpose | Example |
+| ------ | ------- | ------- |
+| `"[string]"` | String value placeholder | `"name": "[string]"` |
+| `[number]` | Number value placeholder | `"count": [number]` |
+| `true\|false` | Boolean value placeholder | `"enabled": true\|false` |
+| `"value1\|value2\|..."` | Enum/union string values | `"status": "pending\|running\|completed"` |
+
+Example JSON format specification (correct - no mock data):
+
+```json
+{
+  "id": "[string]",
+  "name": "[string]",
+  "task_count": [number],
+  "is_parallel": true|false,
+  "status": "pending|running|completed|failed"
+}
+```
+
+### Placeholder Naming Conventions
+
+1. **Self-explanatory names**: Descriptive enough to understand without context
+   - Good: `{workflow-name}`, `{task-count}`, `{ISO-timestamp}`
+   - Bad: `{name}`, `{count}`, `{ts}`
+
+2. **Context-specific prefixes**: When generic concepts appear in multiple contexts
+   - `{task-count}` not `{count}` when counting tasks
+   - `{schema-file-count}` not `{count}` when counting schema files
+
+3. **Case conventions**:
+   - Runtime placeholders: `kebab-case` (e.g., `{workflow-name}`)
+   - Handlebars variables: `snake_case` (e.g., `{{task_id}}`)
+   - JSONPath: `snake_case` matching JSON field names
+
+4. **Inline documentation**: Add parenthetical when clarification needed
+
+   ```markdown
+   Created: {created-timestamp} (ISO 8601 format)
+   ```
+
+### Variable Documentation
+
+Every variable must be explained via one of:
+
+1. **Inline** - parenthetical or comment
+2. **Preceding section** - in `## Input` or table header
+3. **Self-explanatory naming** - clear enough to need no explanation
+
+### Mock Data Rules
+
+**PROHIBITED in**:
+
+- JSON Schema definitions (`templates/*.json`, generated `schemas/*.json`)
+- Data exchange format specifications
+- Output format templates (use placeholders instead)
+
+**ALLOWED in**:
+
+- `## Example` or `## Examples` sections (clearly marked)
+- Files in `examples/` directory
+- Tutorial/README content
+
+### Handlebars Template Variables
+
+The template `templates/task-instruction.md` uses these variables:
+
+| Variable | Type | Description |
+| -------- | ---- | ----------- |
+| `{{name}}` | string | Task name (kebab-case) |
+| `{{description}}` | string | One-sentence task description |
+| `{{id}}` | string | Task ID (format: `task_XX`) |
+| `{{input_fields}}` | array | Input field definitions |
+| `{{output_fields}}` | array | Output field definitions |
+| `{{task_instructions}}` | string | Task-specific guidance |
+| `{{additional_rules}}` | array | Optional extra rules |
+| `{{example_input}}` | string | Example input JSON |
+| `{{example_output}}` | string | Example output JSON |
+
+Field objects contain: `{{field}}`, `{{type}}`, `{{description}}`
