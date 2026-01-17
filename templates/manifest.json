@@ -48,6 +48,16 @@
           "description": {
             "type": "string"
           },
+          "complexity": {
+            "type": "string",
+            "enum": ["light", "moderate", "heavy"],
+            "description": "Task processing complexity classification"
+          },
+          "output_size": {
+            "type": "string",
+            "enum": ["minimal", "standard", "extensive", "collection"],
+            "description": "Expected relative size of task output"
+          },
           "instruction_file": {
             "type": "string",
             "description": "Relative path to instruction .md file"
@@ -71,7 +81,7 @@
             "description": "True if this task was auto-injected (e.g., summarization)"
           }
         },
-        "required": ["id", "name", "description", "instruction_file", "input_schema", "output_schema", "depends_on"]
+        "required": ["id", "name", "description", "complexity", "output_size", "instruction_file", "input_schema", "output_schema", "depends_on"]
       }
     },
 

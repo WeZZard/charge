@@ -32,7 +32,39 @@ Sequential: task_01 → task_02 → task_03
 Parallel:   task_01 → [task_02, task_03] → task_04
 ```
 
-### Step 3: Generate Workflow Name
+### Step 3: Plan Context Checkpoints
+
+Use complexity hints from task analysis to proactively manage context size.
+
+**Checkpoint injection triggers:**
+
+1. **Cumulative output size** - Insert summarization before a task if preceding tasks include:
+   - 3+ tasks with `output_size: extensive` or `collection`
+   - 5+ tasks with `output_size: standard` or higher
+
+2. **Heavy task clusters** - Insert summarization after parallel groups containing:
+   - 2+ tasks with `complexity: heavy`
+
+3. **Task count threshold** - Insert checkpoint summarization when:
+   - Task count > 8 (proactively, before hitting the 10-task threshold)
+
+**Injected summarization tasks:**
+
+When a checkpoint is needed, inject a `summarize-progress` task:
+
+```yaml
+- id: task_XX_summarize
+  name: summarize-progress
+  description: Consolidate results from preceding tasks to reduce context size
+  complexity: light
+  output_size: standard
+  injected: true
+  depends_on: [preceding task IDs]
+```
+
+Mark injected tasks with `injected: true` in the manifest.
+
+### Step 4: Generate Workflow Name
 
 Derive a kebab-case name from the original prompt:
 
@@ -40,7 +72,7 @@ Derive a kebab-case name from the original prompt:
 - Combine into a concise identifier
 - Example: "Build a REST API with auth" → `build-rest-api-auth`
 
-### Step 4: Create Manifest
+### Step 5: Create Manifest
 
 Build the `manifest.json` structure:
 
@@ -57,10 +89,13 @@ Build the `manifest.json` structure:
       "id": "[string]",
       "name": "[string]",
       "description": "[string]",
+      "complexity": "light|moderate|heavy",
+      "output_size": "minimal|standard|extensive|collection",
       "instruction_file": "[string]",
       "input_schema": "[string]",
       "output_schema": "[string]",
-      "depends_on": ["[string]"]
+      "depends_on": ["[string]"],
+      "injected": true|false
     }
   ],
 
@@ -81,7 +116,12 @@ Build the `manifest.json` structure:
 }
 ```
 
-### Step 5: Create State File
+Notes:
+
+- `complexity` and `output_size` are carried from task analysis
+- `injected` is `true` only for auto-generated summarization tasks (omit or set `false` for user-defined tasks)
+
+### Step 6: Create State File
 
 Initialize `state.json`:
 
