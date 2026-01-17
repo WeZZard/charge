@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "task_01_output",
+  "type": "object",
+  "properties": {
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^REQ-[0-9]+$" },
+          "description": { "type": "string" },
+          "priority": { "type": "string", "enum": ["must", "should", "could"] }
+        },
+        "required": ["id", "description", "priority"]
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "fields": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["name", "fields"]
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["requirements", "entities", "constraints"],
+  "additionalProperties": false
+}

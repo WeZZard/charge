@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "task_03_input",
+  "type": "object",
+  "properties": {
+    "api_schema": {
+      "type": "object",
+      "description": "The API schema from task_02"
+    }
+  },
+  "required": ["api_schema"],
+  "additionalProperties": false
+}

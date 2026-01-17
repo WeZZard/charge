@@ -1,0 +1,11 @@
+{
+  "workflow_id": "wf_example001",
+  "status": "pending",
+  "current_task": null,
+  "completed_tasks": [],
+  "failed_tasks": [],
+  "results": {},
+  "started_at": null,
+  "completed_at": null,
+  "error": null
+}

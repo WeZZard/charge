@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "flowit-manifest",
+  "title": "FlowIt Workflow Manifest",
+  "description": "Defines the structure and execution flow of a FlowIt workflow",
+
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Version of the manifest schema",
+      "default": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique workflow identifier",
+      "pattern": "^wf_[a-z0-9]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable workflow name (kebab-case)",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp when workflow was created"
+    },
+    "source_prompt": {
+      "type": "string",
+      "description": "The original user prompt that generated this workflow"
+    },
+
+    "tasks": {
+      "type": "array",
+      "description": "List of tasks in this workflow",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^task_[0-9]+(_[a-z]+)?$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "instruction_file": {
+            "type": "string",
+            "description": "Relative path to instruction .md file"
+          },
+          "input_schema": {
+            "type": "string",
+            "description": "Relative path to input JSON Schema"
+          },
+          "output_schema": {
+            "type": "string",
+            "description": "Relative path to output JSON Schema"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "IDs of tasks that must complete before this one"
+          },
+          "injected": {
+            "type": "boolean",
+            "default": false,
+            "description": "True if this task was auto-injected (e.g., summarization)"
+          }
+        },
+        "required": ["id", "name", "description", "instruction_file", "input_schema", "output_schema", "depends_on"]
+      }
+    },
+
+    "flow": {
+      "type": "object",
+      "description": "Execution flow configuration",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["sequential", "dag"],
+          "description": "Flow type: sequential or directed acyclic graph"
+        },
+        "order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Task execution order"
+        },
+        "parallel_groups": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "description": "Groups of task IDs that can run in parallel"
+        }
+      },
+      "required": ["type", "order"]
+    },
+
+    "mappings": {
+      "type": "array",
+      "description": "Data mappings between task outputs and inputs",
+      "items": {
+        "type": "object",
+        "properties": {
+          "target_task": {
+            "type": "string",
+            "description": "ID of the task receiving the data"
+          },
+          "target_field": {
+            "type": "string",
+            "description": "Field name in target task's input"
+          },
+          "source_task": {
+            "type": "string",
+            "description": "ID of the task providing the data"
+          },
+          "source_path": {
+            "type": "string",
+            "description": "JSONPath to the source data"
+          }
+        },
+        "required": ["target_task", "target_field", "source_task", "source_path"]
+      }
+    }
+  },
+
+  "required": ["schema_version", "id", "name", "created", "source_prompt", "tasks", "flow", "mappings"]
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "id": "wf_example001",
+  "name": "build-simple-api",
+  "created": "2026-01-17T12:00:00Z",
+  "source_prompt": "Build a simple REST API with CRUD operations for a todo list",
+
+  "tasks": [
+    {
+      "id": "task_01",
+      "name": "parse-requirements",
+      "description": "Extract API requirements from the user prompt",
+      "instruction_file": "instructions/task_01.md",
+      "input_schema": "schemas/task_01_input.json",
+      "output_schema": "schemas/task_01_output.json",
+      "depends_on": []
+    },
+    {
+      "id": "task_02",
+      "name": "design-api-schema",
+      "description": "Create the API schema with endpoints and data models",
+      "instruction_file": "instructions/task_02.md",
+      "input_schema": "schemas/task_02_input.json",
+      "output_schema": "schemas/task_02_output.json",
+      "depends_on": ["task_01"]
+    },
+    {
+      "id": "task_03",
+      "name": "generate-code",
+      "description": "Generate the API implementation code",
+      "instruction_file": "instructions/task_03.md",
+      "input_schema": "schemas/task_03_input.json",
+      "output_schema": "schemas/task_03_output.json",
+      "depends_on": ["task_02"]
+    }
+  ],
+
+  "flow": {
+    "type": "sequential",
+    "order": ["task_01", "task_02", "task_03"],
+    "parallel_groups": []
+  },
+
+  "mappings": [
+    {
+      "target_task": "task_02",
+      "target_field": "requirements",
+      "source_task": "task_01",
+      "source_path": "$.requirements"
+    },
+    {
+      "target_task": "task_03",
+      "target_field": "api_schema",
+      "source_task": "task_02",
+      "source_path": "$.api_schema"
+    }
+  ]
+}
