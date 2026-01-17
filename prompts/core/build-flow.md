@@ -21,12 +21,13 @@ Order tasks based on their dependencies:
 ### Step 2: Identify Parallel Groups
 
 Tasks can run in parallel if:
+
 - They have no dependency on each other
 - All their dependencies are already completed
 
 Group tasks into parallel execution groups:
 
-```
+```ascii
 Sequential: task_01 → task_02 → task_03
 Parallel:   task_01 → [task_02, task_03] → task_04
 ```
@@ -34,6 +35,7 @@ Parallel:   task_01 → [task_02, task_03] → task_04
 ### Step 3: Generate Workflow Name
 
 Derive a kebab-case name from the original prompt:
+
 - Extract key nouns and verbs
 - Combine into a concise identifier
 - Example: "Build a REST API with auth" → `build-rest-api-auth`
@@ -104,19 +106,23 @@ The complete manifest and state structures, ready to be written to disk.
 ## Flow Type Decision
 
 Use `"type": "sequential"` when:
+
 - All tasks depend on the previous one
 - Simple linear execution
 
 Use `"type": "dag"` when:
+
 - Some tasks can run in parallel
 - Complex dependency graph
 
 ## Example Flows
 
 ### Sequential
-```
+
+```markdown
 task_01 → task_02 → task_03 → task_04
 ```
+
 ```json
 {
   "type": "sequential",
@@ -126,11 +132,13 @@ task_01 → task_02 → task_03 → task_04
 ```
 
 ### Parallel (diamond pattern)
-```
+
+```ascii
          ┌─ task_02 ─┐
 task_01 ─┤           ├─ task_04
          └─ task_03 ─┘
 ```
+
 ```json
 {
   "type": "dag",

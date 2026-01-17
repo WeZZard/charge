@@ -74,6 +74,7 @@ For each task input that comes from a previous task's output, define the mapping
 ### Step 5: Validate Schema Consistency
 
 Ensure:
+
 - Output types match input types where they're connected
 - All referenced fields exist in their source schemas
 - No orphaned outputs (outputs that nothing consumes, except final task)
@@ -104,6 +105,7 @@ Return schemas organized by task:
 ## Common Schema Patterns
 
 ### String with constraints
+
 ```json
 {
   "type": "string",
@@ -113,6 +115,7 @@ Return schemas organized by task:
 ```
 
 ### Array of objects
+
 ```json
 {
   "type": "array",
@@ -128,6 +131,7 @@ Return schemas organized by task:
 ```
 
 ### Enum values
+
 ```json
 {
   "type": "string",
@@ -136,6 +140,7 @@ Return schemas organized by task:
 ```
 
 ### Optional field with default
+
 ```json
 {
   "type": "string",

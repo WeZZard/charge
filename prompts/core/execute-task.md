@@ -15,11 +15,13 @@ Execute a single task within a workflow.
 ### Step 1: Prepare Execution Context
 
 Load minimal context for this task:
+
 - The task instruction (from `instructions/{task_id}.md`)
 - The input data (built from previous task outputs)
 - The output schema (to constrain the response)
 
 Do NOT load:
+
 - Other task instructions
 - The full workflow manifest
 - Results from unrelated tasks
@@ -30,7 +32,7 @@ This keeps context minimal to prevent window explosion.
 
 Present the task to Claude with this structure:
 
-```
+```markdown
 # Task: {task_name}
 
 {instruction content from file}
@@ -74,6 +76,7 @@ Write the validated output to `results/{task_id}.json`:
 ```
 
 Update `state.json`:
+
 - Add task_id to `completed_tasks`
 - Add result reference to `results`
 - Update `current_task` to next task (or null if done)
@@ -85,7 +88,7 @@ If output validation fails:
 1. Parse the validation error
 2. Re-invoke the task with error context:
 
-```
+```markdown
 # Task: {task_name}
 
 {instruction content}
@@ -123,12 +126,14 @@ Respond with ONLY valid JSON.
 ### Step 6: Report Progress
 
 Output to user:
-```
+
+```ascii
 [{current}/{total}] {task-name}... done
 ```
 
 Or on failure:
-```
+
+```ascii
 [{current}/{total}] {task-name}... FAILED
 Error: {error message}
 ```

@@ -16,7 +16,8 @@ Execute an existing workflow by ID.
 4. Load `manifest.json` from the workflow directory
 
 If workflow not found, report error:
-```
+
+```markdown
 Workflow not found: {id}
 Run /flowit:list to see available workflows.
 ```
@@ -55,7 +56,8 @@ For each task in the execution order defined in `manifest.json`:
    - Update `state.json` with completed task
 
 6. **Report Progress**
-   ```
+
+   ```markdown
    [{current}/{total}] {task-name}... done
    ```
 
@@ -69,7 +71,7 @@ After all tasks complete:
 
 ## Output Format
 
-```
+```markdown
 Executing workflow: {workflow-name}
 Location: {workflow-path}
 

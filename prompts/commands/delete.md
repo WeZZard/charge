@@ -12,7 +12,8 @@ Delete a workflow and all its artifacts.
 
 1. Search for the workflow in `.flowit/` directory
 2. If not found, report error:
-   ```
+
+   ```markdown
    Workflow not found: {id}
    Run /flowit:list to see available workflows.
    ```
@@ -21,7 +22,7 @@ Delete a workflow and all its artifacts.
 
 Ask for user confirmation before deleting:
 
-```
+```markdown
 Delete workflow: {name}
 Location: {path}
 
@@ -37,21 +38,26 @@ Are you sure you want to delete this workflow? (yes/no)
 ### Step 3: Handle User Response
 
 **If user confirms (yes/y):**
+
 1. Delete the entire workflow directory
 2. Report success:
-   ```
+
+   ```markdown
    Workflow deleted: {name}
    ```
 
 **If user declines (no/n):**
+
 1. Report cancellation:
-   ```
+
+   ```markdown
    Deletion cancelled.
    ```
 
 ### Step 4: Clean Up Empty Date Directories
 
 After deleting a workflow:
+
 1. Check if the parent date directory is now empty
 2. If empty, delete the date directory too
 3. Check if `.flowit/` is now empty

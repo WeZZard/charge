@@ -16,6 +16,7 @@ View the structure and status of a workflow.
 ### Step 2: Load Workflow Data
 
 Read from the workflow directory:
+
 - `manifest.json` - workflow definition
 - `state.json` - execution state
 
@@ -23,7 +24,7 @@ Read from the workflow directory:
 
 Display the workflow details in this format:
 
-```
+```markdown
 ## Workflow: {name}
 
 **ID**: {id}

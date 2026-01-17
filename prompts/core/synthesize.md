@@ -17,6 +17,7 @@ Read each result file from `results/{task_id}.json` and extract the output data.
 ### Step 2: Understand the Original Goal
 
 Review the original prompt to understand:
+
 - What the user asked for
 - What format they likely expect (code, text, structured data)
 - What level of detail is appropriate
@@ -26,16 +27,19 @@ Review the original prompt to understand:
 Different synthesis strategies based on workflow type:
 
 **For code generation workflows:**
+
 - Combine code outputs into complete, runnable files
 - Ensure imports and dependencies are resolved
 - Present files in a logical order
 
 **For analysis workflows:**
+
 - Summarize findings from each task
 - Highlight key insights
 - Present recommendations
 
 **For transformation workflows:**
+
 - Show the final transformed output
 - Optionally show intermediate steps
 - Validate the transformation meets requirements
@@ -44,7 +48,7 @@ Different synthesis strategies based on workflow type:
 
 Present the synthesized result in a user-friendly format:
 
-```
+```markdown
 ## Workflow Complete: {workflow-name}
 
 {Summary of what was accomplished}
@@ -108,7 +112,8 @@ Run `/flowit:run {workflow-name}` to retry failed tasks.
 ## Output Formats
 
 ### Code Output
-```
+
+```markdown
 ## Generated Code
 
 ### `{filename}`
@@ -125,7 +130,8 @@ Run `/flowit:run {workflow-name}` to retry failed tasks.
 ```
 
 ### Analysis Output
-```
+
+```markdown
 ## Analysis Results
 
 ### Key Findings
@@ -144,7 +150,8 @@ Run `/flowit:run {workflow-name}` to retry failed tasks.
 ```
 
 ### Data Output
-```
+
+```markdown
 ## Processed Data
 
 \`\`\`json

@@ -12,6 +12,7 @@ Decompose a user prompt into discrete, executable tasks.
 ### Step 1: Understand the Intent
 
 Read the user's prompt and identify:
+
 - The primary goal (what they want to achieve)
 - Secondary objectives (implicit requirements)
 - Constraints (limitations, preferences)
@@ -20,12 +21,14 @@ Read the user's prompt and identify:
 ### Step 2: Identify Task Boundaries
 
 Break down the goal into discrete tasks. A good task:
+
 - Has a single, clear purpose
 - Can be described in one sentence
 - Has identifiable inputs and outputs
 - Is neither too granular nor too broad
 
 Guidelines for task granularity:
+
 - Each task should represent a logical step in the workflow
 - Tasks should be independent enough to have their own instruction file
 - Avoid tasks that are just "validate" or "check" - those are part of execution
@@ -51,6 +54,7 @@ For each task, specify:
 ### Step 4: Map Dependencies
 
 Determine the data flow between tasks:
+
 - Which task outputs feed into which task inputs?
 - Are there tasks that can run in parallel (no shared dependencies)?
 - What is the critical path through the workflow?
@@ -58,6 +62,7 @@ Determine the data flow between tasks:
 ### Step 5: Validate Decomposition
 
 Check that:
+
 - All tasks are necessary (no redundant tasks)
 - All outputs have a consumer (either another task or final output)
 - The dependency graph has no cycles
@@ -94,6 +99,7 @@ Return a structured task list:
 ### Example 1: "Build a REST API with user authentication"
 
 Tasks:
+
 1. `parse-requirements` - Extract API requirements from prompt
 2. `design-api-schema` - Create OpenAPI specification
 3. `implement-endpoints` - Generate route handlers
@@ -103,6 +109,7 @@ Tasks:
 ### Example 2: "Refactor the payment module for better error handling"
 
 Tasks:
+
 1. `analyze-current-code` - Understand existing implementation
 2. `identify-error-cases` - List all error scenarios
 3. `design-error-strategy` - Define error handling approach

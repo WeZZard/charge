@@ -12,7 +12,8 @@ None required.
 
 1. Check if `.flowit/` directory exists in the current project
 2. If not, report:
-   ```
+
+   ```markdown
    No workflows found in this project.
    Create one with: /flowit <your prompt>
    ```
@@ -20,6 +21,7 @@ None required.
 ### Step 2: Scan Workflow Directories
 
 For each date directory in `.flowit/`:
+
 1. List all workflow subdirectories
 2. For each workflow, read `manifest.json` and `state.json`
 3. Collect: name, created date, status, task count
@@ -30,7 +32,7 @@ Display workflows sorted by date (most recent first):
 
 #### Example
 
-```
+```markdown
 ## Workflows in {project-name}
 
 | Date | Workflow | Tasks | Status |
@@ -53,7 +55,8 @@ Total: {count} workflows
 ### Step 4: Handle Empty Results
 
 If `.flowit/` exists but contains no workflows:
-```
+
+```markdown
 No workflows found in this project.
 Create one with: /flowit <your prompt>
 ```
