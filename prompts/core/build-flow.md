@@ -44,36 +44,36 @@ Build the `manifest.json` structure:
 
 ```json
 {
-  "schema_version": "1.0",
-  "id": "wf_{uuid}",
-  "name": "{workflow-name}",
-  "created": "{ISO-timestamp}",
-  "source_prompt": "{original user prompt}",
+  "schema_version": "[string]",
+  "id": "[string]",
+  "name": "[string]",
+  "created": "[string]",
+  "source_prompt": "[string]",
 
   "tasks": [
     {
-      "id": "task_01",
-      "name": "{task-name}",
-      "description": "{description}",
-      "instruction_file": "instructions/task_01.md",
-      "input_schema": "schemas/task_01_input.json",
-      "output_schema": "schemas/task_01_output.json",
-      "depends_on": []
+      "id": "[string]",
+      "name": "[string]",
+      "description": "[string]",
+      "instruction_file": "[string]",
+      "input_schema": "[string]",
+      "output_schema": "[string]",
+      "depends_on": ["[string]"]
     }
   ],
 
   "flow": {
-    "type": "sequential",  // or "dag" for parallel
-    "order": ["task_01", "task_02", "task_03"],
-    "parallel_groups": []  // or [[task_02, task_03]] for parallel
+    "type": "sequential|dag",
+    "order": ["[string]"],
+    "parallel_groups": [["[string]"]]
   },
 
   "mappings": [
     {
-      "target_task": "task_02",
-      "target_field": "requirements",
-      "source_task": "task_01",
-      "source_path": "$.requirements"
+      "target_task": "[string]",
+      "target_field": "[string]",
+      "source_task": "[string]",
+      "source_path": "[string]"
     }
   ]
 }
@@ -85,15 +85,15 @@ Initialize `state.json`:
 
 ```json
 {
-  "workflow_id": "{id}",
-  "status": "pending",
-  "current_task": null,
-  "completed_tasks": [],
-  "failed_tasks": [],
+  "workflow_id": "[string]",
+  "status": "pending|running|completed|failed",
+  "current_task": "[string]|null",
+  "completed_tasks": ["[string]"],
+  "failed_tasks": ["[string]"],
   "results": {},
-  "started_at": null,
-  "completed_at": null,
-  "error": null
+  "started_at": "[string]|null",
+  "completed_at": "[string]|null",
+  "error": "[string]|null"
 }
 ```
 

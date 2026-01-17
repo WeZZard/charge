@@ -45,14 +45,14 @@ Create a summarization task:
 
 ```json
 {
-  "id": "task_XX_summarize",
-  "name": "summarize-progress",
-  "description": "Condense accumulated outputs to reduce context size",
-  "instruction_file": "instructions/task_XX_summarize.md",
-  "input_schema": "schemas/task_XX_summarize_input.json",
-  "output_schema": "schemas/task_XX_summarize_output.json",
-  "depends_on": ["task_XX"],
-  "injected": true
+  "id": "[string]",
+  "name": "[string]",
+  "description": "[string]",
+  "instruction_file": "[string]",
+  "input_schema": "[string]",
+  "output_schema": "[string]",
+  "depends_on": ["[string]"],
+  "injected": true|false
 }
 ```
 
@@ -99,10 +99,10 @@ For chunked outputs, use this reference pattern:
 
 ```json
 {
-  "type": "file_reference",
-  "path": "results/task_XX_full.json",
-  "summary": "Contains 150 API endpoints with full specifications",
-  "key_fields": ["endpoints", "schemas"]
+  "type": "[string]",
+  "path": "[string]",
+  "summary": "[string]",
+  "key_fields": ["[string]"]
 }
 ```
 

@@ -28,6 +28,8 @@ For each date directory in `.flowit/`:
 
 Display workflows sorted by date (most recent first):
 
+#### Example
+
 ```
 ## Workflows in {project-name}
 

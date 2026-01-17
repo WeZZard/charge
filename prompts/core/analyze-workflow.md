@@ -69,36 +69,23 @@ Return a structured task list:
 
 ```json
 {
-  "workflow_name": "{derived-from-prompt}",
+  "workflow_name": "[string]",
   "tasks": [
     {
-      "id": "task_01",
-      "name": "parse-requirements",
-      "description": "Extract structured requirements from the user prompt",
+      "id": "[string]",
+      "name": "[string]",
+      "description": "[string]",
       "input": [
-        {"field": "raw_prompt", "type": "string", "description": "The original user request"}
+        {"field": "[string]", "type": "[string]", "description": "[string]"}
       ],
       "output": [
-        {"field": "requirements", "type": "array", "description": "List of structured requirements"},
-        {"field": "constraints", "type": "array", "description": "Identified constraints"}
+        {"field": "[string]", "type": "[string]", "description": "[string]"}
       ],
-      "depends_on": []
-    },
-    {
-      "id": "task_02",
-      "name": "design-solution",
-      "description": "Create a high-level design based on requirements",
-      "input": [
-        {"field": "requirements", "type": "array", "from": "task_01"}
-      ],
-      "output": [
-        {"field": "design", "type": "object", "description": "Solution design"}
-      ],
-      "depends_on": ["task_01"]
+      "depends_on": ["[string]"]
     }
   ],
-  "execution_order": ["task_01", "task_02"],
-  "parallel_groups": []
+  "execution_order": ["[string]"],
+  "parallel_groups": [["[string]"]]
 }
 ```
 

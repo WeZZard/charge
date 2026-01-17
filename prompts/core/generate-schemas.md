@@ -85,21 +85,17 @@ Return schemas organized by task:
 ```json
 {
   "schemas": {
-    "task_01": {
-      "input": { /* JSON Schema */ },
-      "output": { /* JSON Schema */ }
-    },
-    "task_02": {
-      "input": { /* JSON Schema */ },
-      "output": { /* JSON Schema */ }
+    "{task-id}": {
+      "input": {"$comment": "JSON Schema object"},
+      "output": {"$comment": "JSON Schema object"}
     }
   },
   "mappings": [
     {
-      "target_task": "task_02",
-      "target_field": "requirements",
-      "source_task": "task_01",
-      "source_path": "$.requirements"
+      "target_task": "[string]",
+      "target_field": "[string]",
+      "source_task": "[string]",
+      "source_path": "[string]"
     }
   ]
 }
