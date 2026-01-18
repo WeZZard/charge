@@ -95,12 +95,18 @@ Approve this workflow?
    │                     └──────────┬──────────┘              │
    │                                ▼                         │
    ```
-4. **Template tasks** - Show with iteration indicator:
+4. **Template tasks** - Show with double-line box and loop indicator:
    ```
-   │   ┌─────────────────────────┐                            │
-   │   │ 2. {task-name} [×N]     │  ◄── iterates over items   │
-   │   └─────────────────────────┘                            │
+   │            │                                                │
+   │            ▼                                                │
+   │   ╔═════════════════════════╗                               │
+   │   ║ 2. {task-name}     [×N] ║ ◀─╮                           │
+   │   ╚═════════════════════════╝   │ repeat                    │
+   │            │ ───────────────────╯                           │
+   │            ▼                                                │
    ```
+   - Use `╔═══╗` double-line box to highlight iteration
+   - Add loop arrow `◀─╮` with `│ repeat` and return line `───╯`
 
 **Single-Step Workflow Example:**
 
