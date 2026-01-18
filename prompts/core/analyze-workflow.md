@@ -105,6 +105,20 @@ For each task, specify:
 
 For non-template tasks, omit `is_template` and `iteration` fields.
 
+#### Iteration Strategy Selection
+
+**Choose `parallel` when:**
+- Items are independent (no shared state)
+- Order doesn't matter for correctness
+- Operations are read-only or analysis-focused
+
+**Choose `sequential` when:**
+- Items depend on previous item's result
+- Order matters (numbered steps, migrations)
+- Write operations that could conflict
+
+**Default to `parallel`** unless a sequential condition applies. Parallel execution significantly improves workflow performance.
+
 #### Complexity Classification
 
 Classify each task's processing effort:
