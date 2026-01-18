@@ -46,28 +46,74 @@ Read and apply `prompts/core/build-flow.md` to determine:
 
 ### Phase 4: Present Plan for Approval
 
-Present the proposed workflow to the user with the **ExitPlanMode** tool in this format:
+Present the proposed workflow to the user with the **ExitPlanMode** tool. Include a visual diagram with bounding box.
+
+**Format:**
 
 ```markdown
 ## Proposed Workflow: {workflow-name}
 
-Tasks:
-  1. {task-name}
-     Input: {brief description of input}
-     Output: {brief description of output}
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   ┌─────────────────┐                                       │
+│   │ 1. {task-name}  │                                       │
+│   └────────┬────────┘                                       │
+│            │                                                │
+│            ▼                                                │
+│   ┌─────────────────┐                                       │
+│   │ 2. {task-name}  │                                       │
+│   └────────┬────────┘                                       │
+│            │                                                │
+│            ▼                                                │
+│   ┌─────────────────┐                                       │
+│   │ 3. {task-name}  │                                       │
+│   └─────────────────┘                                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 
-  2. {task-name}
-     Input: {brief description of input}
-     Output: {brief description of output}
+### Tasks
 
-  ... (continue for all tasks)
-
-Execution: {Sequential | Parallel groups: [...]}
+| # | Task | Description |
+|---|------|-------------|
+| 1 | {task-name} | {brief description} |
+| 2 | {task-name} | {brief description} |
+| 3 | {task-name} | {brief description} |
 
 ---
-Do you approve this workflow? You can:
-- Approve to proceed
-- Provide feedback to refine the workflow
+Approve this workflow?
+```
+
+**Diagram Rules:**
+
+1. **Always use bounding box** - Even for 1-step workflows, wrap in outer box
+2. **Sequential flow** - Use `│` and `▼` arrows between tasks
+3. **Parallel tasks** - Show side-by-side with horizontal connection:
+   ```
+   │            ┌─────────────────┐   ┌─────────────────┐
+   ├───────────►│ 2a. {task}      │   │ 2b. {task}      │◄────┤
+   │            └────────┬────────┘   └────────┬────────┘     │
+   │                     └──────────┬──────────┘              │
+   │                                ▼                         │
+   ```
+4. **Template tasks** - Show with iteration indicator:
+   ```
+   │   ┌─────────────────────────┐                            │
+   │   │ 2. {task-name} [×N]     │  ◄── iterates over items   │
+   │   └─────────────────────────┘                            │
+   ```
+
+**Single-Step Workflow Example:**
+
+```markdown
+## Proposed Workflow: analyze-code
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   ┌─────────────────────────┐                               │
+│   │ 1. analyze-codebase     │                               │
+│   └─────────────────────────┘                               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### Phase 5: Handle User Response
