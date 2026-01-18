@@ -24,17 +24,22 @@ Run /charge:list to see available workflows.
 
 ### Step 2: Get Session ID and Create Execution Directory
 
-1. Get the Claude Code parent process info via bash:
-   ```bash
-   ps -p $PPID -o lstart,pid | tail -1
-   ```
-2. Parse the output to construct session ID: `{YYYY-MM-DD-hh-mm-ss}-{PPID}`
-   - Example output: `Sun Jan 18 20:34:14 2026 50622`
+1. **Get the Claude Code parent process info**:
+   - Run bash command: `echo "$PPID"` to get parent PID
+   - Run bash command: `ps -p <PPID_VALUE> -o lstart` to get start time
+   - The `PPID` shell variable contains the parent process ID
+
+2. **Construct session ID**: `{YYYY-MM-DD-hh-mm-ss}-{PPID}`
+   - Example: If PPID is `50622` and start time is `Sun Jan 18 20:34:14 2026`
    - Session ID: `2026-01-18-20-34-14-50622`
-3. Generate execution timestamp: `{YYYY-MM-DD-hh-mm-ss}` (current UTC time)
-4. Create execution directory: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
-5. Create `results/` subdirectory
-6. Initialize `state.json` with:
+
+3. **Generate execution timestamp**: `{YYYY-MM-DD-hh-mm-ss}` (current UTC time)
+
+4. **Create execution directory**: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
+
+5. **Create `results/` subdirectory**
+
+6. **Initialize `state.json`** with:
    ```json
    {
      "workflow_ref": "workflows/{YYYY-MM-DD}-{workflow-name}",
