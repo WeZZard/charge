@@ -24,22 +24,20 @@ Run /charge:list to see available workflows.
 
 ### Step 2: Get Session ID and Create Execution Directory
 
-1. **Get the Claude Code parent process info**:
-   - Run bash command: `echo "$PPID"` to get parent PID
-   - Run bash command: `ps -p <PPID_VALUE> -o lstart` to get start time
-   - The `PPID` shell variable contains the parent process ID
+1. **Compute session ID** with a single bash command:
+   ```bash
+   SESSION_ID=$(ps -p $PPID -o lstart= | awk '{print $5"-"$2"-"$3"-"$4}')-$PPID
+   ```
+   - Example result: `2026-Jan-18-20:34:14-50622`
 
-2. **Construct session ID**: `{YYYY-MM-DD-hh-mm-ss}-{PPID}`
-   - Example: If PPID is `50622` and start time is `Sun Jan 18 20:34:14 2026`
-   - Session ID: `2026-01-18-20-34-14-50622`
+2. **Generate execution timestamp**: Current time in `YYYY-MM-DD-hh-mm-ss` format
 
-3. **Generate execution timestamp**: `{YYYY-MM-DD-hh-mm-ss}` (current UTC time)
+3. **Create execution directory and results subdirectory**:
+   ```bash
+   mkdir -p .charge/sessions/$SESSION_ID/{execution_timestamp}-{workflow-name}/results
+   ```
 
-4. **Create execution directory**: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
-
-5. **Create `results/` subdirectory**
-
-6. **Initialize `state.json`** with:
+4. **Initialize `state.json`** with:
    ```json
    {
      "workflow_ref": "workflows/{YYYY-MM-DD}-{workflow-name}",
@@ -87,32 +85,35 @@ Template tasks iterate over a collection and execute once per item.
 - `sequential`: Execute one item at a time, wait for completion before next
 - `parallel`: Execute all items concurrently using multiple Task tool calls (batch size: 5)
 
-**4.3 Execute for Each Item**
+**4.3 Execute Items Based on Strategy**
 
-For each item in the resolved collection (with index `i` starting at 1):
+For each item, determine input source path first:
+- DO NOT read the file content
+- Only construct the full path to the source file
+- For static items (like blog posts): resolve relative path to absolute path
 
-1. **Determine Input Source Path**
-   - DO NOT read the file content
-   - Only construct the full path to the source file
-   - For static items (like blog posts): resolve relative path to absolute path
+**If `iteration.strategy` is `sequential`:**
 
-2. **Execute the Task**
-   - Follow `prompts/core/execute-task.md`
-   - Pass only: workflow path, task ID, input source path, item index, total items
-   - The sub-agent will read all files itself
+For each item in the collection (index `i` starting at 1):
+1. Execute the task via `prompts/core/execute-task.md`
+2. Pass only: workflow path, task ID, input source path, item index, total items
+3. Wait for completion
+4. Report progress: `[{task}/{total}] {name} [{i}/{items}]... done`
+5. Proceed to next item
 
-3. **Report Item Progress**
-   ```
-   [{task_current}/{task_total}] {task-name} [{item_current}/{item_total}]... done
-   ```
+**If `iteration.strategy` is `parallel`:**
 
-**4.4 Handle Parallel Execution**
+1. Batch items into groups of 5
+2. For each batch:
+   - **Spawn ALL Task tool calls in a SINGLE message** (this is critical for parallelism)
+   - Each Task call follows `prompts/core/execute-task.md`
+   - Wait for all tasks in the batch to complete
+   - Report batch progress: `[{task}/{total}] {name} [{start}-{end}/{items}]... done`
+3. Proceed to next batch
+4. If any fail, retry failed items up to 2 times each
 
-When `iteration.strategy` is `parallel`:
-
-- Spawn multiple Task tool calls in a single message (up to 5 concurrent)
-- Wait for all to complete before spawning next batch
-- If any fail, retry failed items up to 2 times each
+**CRITICAL**: For parallel execution, you MUST invoke multiple Task tools in ONE message.
+Sequential invocation defeats the purpose of parallel strategy.
 
 **4.5 Aggregate Template Results**
 
