@@ -26,7 +26,7 @@ Run /charge:list to see available workflows.
 
 1. **Compute session ID** with a single bash command:
    ```bash
-   SESSION_ID=$(ps -p $PPID -o lstart= | awk 'BEGIN{m["Jan"]="01";m["Feb"]="02";m["Mar"]="03";m["Apr"]="04";m["May"]="05";m["Jun"]="06";m["Jul"]="07";m["Aug"]="08";m["Sep"]="09";m["Oct"]="10";m["Nov"]="11";m["Dec"]="12"}{gsub(/:/,"-",$4);printf "%s-%s-%02d-%s",$5,m[$2],$3,$4}')-$PPID
+   SESSION_ID=$(LANG=C ps -p $PPID -o lstart= | awk 'BEGIN{m["Jan"]="01";m["Feb"]="02";m["Mar"]="03";m["Apr"]="04";m["May"]="05";m["Jun"]="06";m["Jul"]="07";m["Aug"]="08";m["Sep"]="09";m["Oct"]="10";m["Nov"]="11";m["Dec"]="12"}{gsub(/:/,"-",$4);printf "%s-%s-%02d-%s",$5,m[$2],$3,$4}')-$PPID
    ```
    - Example result: `2026-01-18-20-34-14-50622`
 
