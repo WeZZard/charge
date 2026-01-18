@@ -130,7 +130,7 @@ Charge separates workflow definitions from execution results:
 
 ### Workflow Definitions
 ```
-{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
+$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
 ├── manifest.json           # Workflow definition
 ├── instructions/           # Per-task instruction files
 │   ├── task_01.md
@@ -142,7 +142,7 @@ Charge separates workflow definitions from execution results:
 
 ### Execution Results
 ```
-{project}/.charge/sessions/{session_id}/{timestamp}-{workflow-name}/
+$HOME/.charge/sessions/{session_id}/{timestamp}-{workflow-name}/
 ├── state.json              # Execution state
 └── results/                # Task outputs
     ├── task_01.json

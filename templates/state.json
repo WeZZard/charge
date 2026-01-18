@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "charge-state",
   "title": "Charge Execution State",
-  "description": "Tracks the execution state of a workflow run. Stored in .charge/sessions/{session_id}/{execution_id}/",
+  "description": "Tracks the execution state of a workflow run. Stored in $HOME/.charge/sessions/{session_id}/{execution_id}/",
 
   "type": "object",
   "properties": {

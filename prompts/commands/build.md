@@ -75,7 +75,7 @@ Do you approve this workflow? You can:
 **If user approves:**
 
 1. Generate a workflow ID: `{workflow-name}` (derived from prompt, kebab-case)
-2. Create the workflow directory at `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+2. Create the workflow directory at `$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
 3. Write workflow artifacts (NO `state.json` or `results/` - those are created at execution time):
    - `manifest.json` using `templates/manifest.json` structure
    - Task instruction files in `instructions/` using `templates/task-instruction.md`
@@ -84,7 +84,7 @@ Do you approve this workflow? You can:
 
    ```ascii
    Workflow created: {workflow-name}
-   Location: .charge/workflows/{YYYY-MM-DD}-{workflow-name}/
+   Location: $HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
 
    Run with: /charge:run {workflow-name}
    ```
@@ -100,7 +100,7 @@ Do you approve this workflow? You can:
 
 ### Phase 6: Persist the Workflow
 
-You MUST persist workflow to `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+You MUST persist workflow to `$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
 
 **DO NOT** create `state.json` or `results/` directory during build - these are created during execution in the sessions directory.
 
@@ -110,4 +110,4 @@ You MUST persist workflow to `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
 - The bare `/charge` command calls this build flow AND then executes; this command only builds
 - Always persist the approved workflow to disk before reporting success
 - Use the current date (YYYY-MM-DD) as a prefix in the workflow directory name
-- Workflow directory format: `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+- Workflow directory format: `$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`

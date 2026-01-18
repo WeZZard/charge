@@ -51,7 +51,7 @@ Shows workflow structure, tasks, schemas, and execution status.
 
 Load and follow: `prompts/commands/list.md`
 
-Lists all workflows in the current project's `.charge/` directory.
+Lists all workflows in the current project's `$HOME/.charge/` directory.
 
 ### Route: `/charge:delete <id>`
 
@@ -66,7 +66,7 @@ Charge separates workflow definitions from execution results:
 ### Workflow Definitions (Reusable)
 
 ```ascii
-{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
+$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
 ├── manifest.json          # Workflow definition
 ├── instructions/          # Per-task instruction files
 └── schemas/               # JSON Schema files for task I/O
@@ -75,7 +75,7 @@ Charge separates workflow definitions from execution results:
 ### Execution Sessions (Per-Session)
 
 ```ascii
-{project}/.charge/sessions/{start-timestamp}-{PPID}/{YYYY-MM-DD-hh-mm-ss}-{workflow-name}/
+$HOME/.charge/sessions/{start-timestamp}-{PPID}/{YYYY-MM-DD-hh-mm-ss}-{workflow-name}/
 ├── state.json             # Execution state
 └── results/               # Task output files
 ```

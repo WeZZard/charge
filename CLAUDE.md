@@ -22,8 +22,8 @@ Charge is invoked as a Claude Code skill:
 | `/charge:delete <id>` | Delete a workflow |
 
 **Storage Structure:**
-- Workflows: `{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
-- Sessions: `{project}/.charge/sessions/{start-timestamp}-{PPID}/{execution-timestamp}-{workflow-name}/`
+- Workflows: `$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+- Sessions: `$HOME/.charge/sessions/{start-timestamp}-{PPID}/{execution-timestamp}-{workflow-name}/`
 
 ## Architecture
 
@@ -56,12 +56,12 @@ skill.md → prompts/commands/*.md → prompts/core/*.md → workflow execution
 
 ### Data Structures
 
-**In Workflow Directory** (`.charge/workflows/{date}-{name}/`):
+**In Workflow Directory** (`$HOME/.charge/workflows/{date}-{name}/`):
 - **Manifest** (`manifest.json`): Workflow definition with tasks, flow order, and data mappings
 - **Instructions** (`instructions/{task_id}.md`): Per-task instruction files
 - **Schemas** (`schemas/{task_id}_input.json`, `schemas/{task_id}_output.json`): JSON Schema contracts
 
-**In Execution Directory** (`.charge/sessions/{session_id}/{execution_id}/`):
+**In Execution Directory** (`$HOME/.charge/sessions/{session_id}/{execution_id}/`):
 - **State** (`state.json`): Runtime execution state with `workflow_ref`, `session_id`, `execution_id`
 - **Results** (`results/{task_id}.json`): Task output files
 

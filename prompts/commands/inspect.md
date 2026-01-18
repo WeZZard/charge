@@ -10,7 +10,7 @@ View the structure of a workflow definition.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.charge/workflows/` directory
+1. Search for the workflow in `$HOME/.charge/workflows/` directory
 2. If `id` is just a name, search by matching the workflow name suffix (ignoring date prefix)
 3. If not found, report error and suggest `/charge:list`
 
@@ -27,7 +27,7 @@ Display the workflow details in this format:
 ```markdown
 ## Workflow: {name}
 
-**Location**: .charge/workflows/{YYYY-MM-DD}-{name}/
+**Location**: $HOME/.charge/workflows/{YYYY-MM-DD}-{name}/
 **Created**: {created timestamp from directory name}
 **Schema Version**: {schema_version}
 
@@ -68,11 +68,11 @@ Parallel Groups:
 - Run: `/charge:run {name}`
 - Delete: `/charge:delete {name}`
 
-**Execution History**: Use `ls .charge/sessions/` to view past executions.
+**Execution History**: Use `ls $HOME/.charge/sessions/` to view past executions.
 ```
 
 ## Notes
 
 - This is a read-only command - it doesn't modify anything
 - Workflow definitions do not include execution state (that's in sessions)
-- Use `ls .charge/sessions/{session_id}/` to find execution results
+- Use `ls $HOME/.charge/sessions/{session_id}/` to find execution results

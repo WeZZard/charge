@@ -10,7 +10,7 @@ Execute an existing workflow by ID.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.charge/workflows/` directory
+1. Search for the workflow in `$HOME/.charge/workflows/` directory
 2. If `id` is a full path, use it directly
 3. If `id` is just a name, search by matching the workflow name suffix (ignoring date prefix)
 4. Load `manifest.json` from the workflow directory
@@ -40,7 +40,7 @@ Run /charge:list to see available workflows.
    - `state_path`: Path to state.json
 
 Store both paths for use throughout execution:
-- `workflow_path`: `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+- `workflow_path`: `$HOME/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
 - `execution_path`: (returned from persist-execution)
 
 ### Step 3: Execute Tasks

@@ -19,7 +19,7 @@ Create execution directories and initialize state.json.
 
 2. Create execution directory and results subdirectory:
    ```bash
-   mkdir -p .charge/sessions/{session_id}/{execution_timestamp}-{workflow_name}/results
+   mkdir -p $HOME/.charge/sessions/{session_id}/{execution_timestamp}-{workflow_name}/results
    ```
 
 3. Initialize `state.json` at `{execution_path}/state.json`:
@@ -42,8 +42,8 @@ Create execution directories and initialize state.json.
 **Output**:
 ```json
 {
-  "execution_path": ".charge/sessions/{session_id}/{execution_id}",
-  "state_path": ".charge/sessions/{session_id}/{execution_id}/state.json"
+  "execution_path": "$HOME/.charge/sessions/{session_id}/{execution_id}",
+  "state_path": "$HOME/.charge/sessions/{session_id}/{execution_id}/state.json"
 }
 ```
 

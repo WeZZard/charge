@@ -10,7 +10,7 @@ None required.
 
 ### Step 1: Find Workflows
 
-1. Check if `.charge/workflows/` directory exists in the current project
+1. Check if `$HOME/.charge/workflows/` directory exists in the current project
 2. If not, report:
 
    ```markdown
@@ -20,7 +20,7 @@ None required.
 
 ### Step 2: Scan Workflow Directories
 
-For each workflow directory in `.charge/workflows/`:
+For each workflow directory in `$HOME/.charge/workflows/`:
 
 1. Parse directory name to extract date and workflow name (format: `{YYYY-MM-DD}-{workflow-name}`)
 2. Read `manifest.json` to get task count
@@ -51,12 +51,12 @@ Total: {count} workflows
 - Run: `/charge:run <workflow-name>`
 - Delete: `/charge:delete <workflow-name>`
 
-**Sessions**: Use `ls .charge/sessions/` to view execution history.
+**Sessions**: Use `ls $HOME/.charge/sessions/` to view execution history.
 ```
 
 ### Step 4: Handle Empty Results
 
-If `.charge/workflows/` exists but contains no workflows:
+If `$HOME/.charge/workflows/` exists but contains no workflows:
 
 ```markdown
 No workflows found in this project.
@@ -68,4 +68,4 @@ Create one with: /charge <your prompt>
 - Workflows are sorted by creation date (from directory name prefix)
 - Status is not shown here since execution state is stored separately in sessions
 - Use `/charge:inspect` to view workflow details
-- Use `ls .charge/sessions/` to view execution history
+- Use `ls $HOME/.charge/sessions/` to view execution history
