@@ -26,9 +26,9 @@ Run /charge:list to see available workflows.
 
 1. **Compute session ID** with a single bash command:
    ```bash
-   SESSION_ID=$(ps -p $PPID -o lstart= | awk '{print $5"-"$2"-"$3"-"$4}')-$PPID
+   SESSION_ID=$(ps -p $PPID -o lstart= | awk 'BEGIN{m["Jan"]="01";m["Feb"]="02";m["Mar"]="03";m["Apr"]="04";m["May"]="05";m["Jun"]="06";m["Jul"]="07";m["Aug"]="08";m["Sep"]="09";m["Oct"]="10";m["Nov"]="11";m["Dec"]="12"}{gsub(/:/,"-",$4);printf "%s-%s-%02d-%s",$5,m[$2],$3,$4}')-$PPID
    ```
-   - Example result: `2026-Jan-18-20:34:14-50622`
+   - Example result: `2026-01-18-20-34-14-50622`
 
 2. **Generate execution timestamp**: Current time in `YYYY-MM-DD-hh-mm-ss` format
 
@@ -112,7 +112,7 @@ For each item in the collection (index `i` starting at 1):
 3. Proceed to next batch
 4. If any fail, retry failed items up to 2 times each
 
-**CRITICAL**: For parallel execution, you MUST invoke multiple Task tools in ONE message.
+**MANDATORY**: For parallel execution, you MUST invoke multiple Task tools in ONE message.
 Sequential invocation defeats the purpose of parallel strategy.
 
 **4.5 Aggregate Template Results**
