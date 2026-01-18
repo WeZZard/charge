@@ -22,7 +22,7 @@ Workflow not found: {id}
 Run /charge:list to see available workflows.
 ```
 
-### Step 2: Get Session ID and Create Execution Directory
+### Step 2: Initialize Execution
 
 1. **Compute session ID** with a single bash command:
    ```bash
@@ -30,33 +30,18 @@ Run /charge:list to see available workflows.
    ```
    - Example result: `2026-01-18-20-34-14-50622`
 
-2. **Generate execution timestamp**: Current time in `YYYY-MM-DD-hh-mm-ss` format
+2. **Create execution environment** by following `prompts/core/persist-execution.md` with operation `init`:
+   - workflow_path: `{workflow_path}`
+   - workflow_name: `{workflow-name}`
+   - session_id: `{SESSION_ID}`
 
-3. **Create execution directory and results subdirectory**:
-   ```bash
-   mkdir -p .charge/sessions/$SESSION_ID/{execution_timestamp}-{workflow-name}/results
-   ```
-
-4. **Initialize `state.json`** with:
-   ```json
-   {
-     "workflow_ref": "workflows/{YYYY-MM-DD}-{workflow-name}",
-     "session_id": "{session_id}",
-     "execution_id": "{execution_timestamp}-{workflow-name}",
-     "status": "running",
-     "current_task": null,
-     "completed_tasks": [],
-     "failed_tasks": [],
-     "results": {},
-     "started_at": "{ISO-timestamp}",
-     "completed_at": null,
-     "error": null
-   }
-   ```
+   This creates directories and initializes `state.json`. Returns:
+   - `execution_path`: Path to the execution directory
+   - `state_path`: Path to state.json
 
 Store both paths for use throughout execution:
 - `workflow_path`: `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
-- `execution_path`: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
+- `execution_path`: (returned from persist-execution)
 
 ### Step 3: Execute Tasks
 
@@ -119,21 +104,28 @@ Sequential invocation defeats the purpose of parallel strategy.
 
 After all items complete:
 
-- Collect all item result file paths from `{execution_path}/results/`
-- Create an aggregated result at `{execution_path}/results/{task_id}.json` containing:
-  ```json
-  {
-    "items": [
-      {"index": 1, "result_path": "results/{task_id}_item_01.json"},
-      {"index": 2, "result_path": "results/{task_id}_item_02.json"}
-    ],
-    "total_count": [number],
-    "success_count": [number],
-    "failed_count": [number]
-  }
-  ```
-- Update `{execution_path}/state.json` with the aggregated result path
-- Return to Step 3 for the next task
+1. Collect all item result file paths from `{execution_path}/results/`
+
+2. Create an aggregated result at `{execution_path}/results/{task_id}.json` containing:
+   ```json
+   {
+     "items": [
+       {"index": 1, "result_path": "results/{task_id}_item_01.json"},
+       {"index": 2, "result_path": "results/{task_id}_item_02.json"}
+     ],
+     "total_count": [number],
+     "success_count": [number],
+     "failed_count": [number]
+   }
+   ```
+
+3. Follow `prompts/core/persist-execution.md` with operation `task_complete`:
+   - execution_path: `{execution_path}`
+   - task_id: `{task_id}`
+   - result_path: `results/{task_id}.json`
+   - next_task: (next task ID or null)
+
+4. Return to Step 3 for the next task
 
 ### Step 5: Execute Regular Task
 
@@ -160,8 +152,20 @@ DO NOT read any files. Only determine paths:
 
 **5.3 Handle Response**
 
-- On success: update `{execution_path}/state.json` with completed task
-- On failure: retry up to 2 times, then pause for user guidance
+On success:
+- Follow `prompts/core/persist-execution.md` with operation `task_complete`:
+  - execution_path: `{execution_path}`
+  - task_id: `{task_id}`
+  - result_path: `results/{task_id}.json`
+  - next_task: (next task ID or null)
+
+On failure:
+- Retry up to 2 times
+- If still failing, follow `prompts/core/persist-execution.md` with operation `task_failed`:
+  - execution_path: `{execution_path}`
+  - task_id: `{task_id}`
+  - error: `{error message}`
+- Pause for user guidance
 
 **5.4 Report Progress**
 
@@ -177,7 +181,8 @@ After all tasks complete:
 
 1. Follow `prompts/core/synthesize.md` to combine task outputs from `{execution_path}/results/`
 2. Present the final result to the user
-3. Update `{execution_path}/state.json` status to "completed"
+3. Follow `prompts/core/persist-execution.md` with operation `finalize`:
+   - execution_path: `{execution_path}`
 
 ## Output Format
 

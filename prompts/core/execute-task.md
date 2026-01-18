@@ -143,27 +143,14 @@ The Task tool result includes:
 Process the status:
 
 1. If `status` is `"success"`:
-   - Proceed to Step 4 (do NOT read the output file in main agent)
+   - Return the result to the caller (do NOT read the output file in main agent)
    - Trust the sub-agent's validation
+   - State updates are handled by `run.md` via `persist-execution.md`
 
 2. If `status` is `"failed"`:
-   - Go to Step 5 (retry) with the error message
+   - Go to Step 4 (retry) with the error message
 
-### Step 4: Update State
-
-Update `{execution_path}/state.json`:
-
-- Add task_id to `completed_tasks`
-- Add result path to `results` (relative to execution directory)
-- Update `current_task` to next task (or null if done)
-
-**For template task iterations**:
-
-- Do NOT update `completed_tasks` until ALL items are processed
-- Track individual item completions in `iteration_state`
-- Only mark the template task as complete after all items finish
-
-### Step 5: Handle Failure (Retry)
+### Step 4: Handle Failure (Retry)
 
 If the sub-agent returns `"failed"` status:
 
@@ -183,7 +170,7 @@ Task(
 ```
 
 3. Retry up to 2 times (each retry resumes the same agent)
-4. If still failing, mark task as failed and pause workflow
+4. If still failing, return failure status to caller (state update handled by run.md)
 
 **For template task iterations**:
 
@@ -192,7 +179,7 @@ Task(
 - After all items attempted, report which items failed
 - Allow user to choose: retry failed items, skip them, or abort
 
-### Step 6: Report Progress
+### Step 5: Report Progress
 
 **For regular tasks**:
 
