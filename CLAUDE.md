@@ -21,7 +21,7 @@ Charge is invoked as a Claude Code skill:
 | `/charge:list` | List all workflows in project |
 | `/charge:delete <id>` | Delete a workflow |
 
-Workflows are stored at: `{project}/.charge/{YY-MM-DD}/{workflow-name}/`
+Workflows are stored at: `{project}/.charge/{YYYY-MM-DD}/{workflow-name}/`
 
 ## Architecture
 

@@ -75,7 +75,7 @@ Do you approve this workflow? You can:
 **If user approves:**
 
 1. Generate a workflow ID: `{workflow-name}` (derived from prompt, kebab-case)
-2. Create the workflow directory at `.charge/{YY-MM-DD}/{workflow-name}/`
+2. Create the workflow directory at `.charge/{YYYY-MM-DD}/{workflow-name}/`
 3. Write all artifacts:
    - `manifest.json` using `templates/manifest.json` structure
    - `state.json` using `templates/state.json` structure
@@ -85,7 +85,7 @@ Do you approve this workflow? You can:
 
    ```ascii
    Workflow created: {workflow-name}
-   Location: .charge/{YY-MM-DD}/{workflow-name}/
+   Location: .charge/{YYYY-MM-DD}/{workflow-name}/
 
    Run with: /charge:run {workflow-name}
    ```
@@ -101,11 +101,11 @@ Do you approve this workflow? You can:
 
 ### Phase 6: Persist the Workflow
 
-You MUST persist workflow to `.charge/{YY-MM-DD}/{workflow-name}/`
+You MUST persist workflow to `.charge/{YYYY-MM-DD}/{workflow-name}/`
 
 ## Important Notes
 
 - Do NOT execute the workflow after building - that's what `/charge:run` is for
 - The bare `/charge` command calls this build flow AND then executes; this command only builds
 - Always persist the approved workflow to disk before reporting success
-- Use the current date (YY-MM-DD format) for the workflow directory
+- Use the current date (YYYY-MM-DD format) for the workflow directory

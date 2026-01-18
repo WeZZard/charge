@@ -58,7 +58,7 @@ Deletes a workflow and its artifacts.
 All workflow artifacts are stored at:
 
 ```ascii
-{project}/.charge/{YY-MM-DD}/{workflow-name}/
+{project}/.charge/{YYYY-MM-DD}/{workflow-name}/
 ├── manifest.json          # Workflow definition
 ├── state.json             # Execution state
 ├── instructions/          # Per-task instruction files

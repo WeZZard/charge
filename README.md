@@ -93,7 +93,7 @@ Charge prevents context explosion by:
 Workflows are stored at:
 
 ```
-{project}/.charge/{YY-MM-DD}/{workflow-name}/
+{project}/.charge/{YYYY-MM-DD}/{workflow-name}/
 ├── manifest.json      # Workflow definition
 ├── state.json         # Execution state
 ├── instructions/      # Task instruction files
