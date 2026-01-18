@@ -4,24 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FlowIt is a Claude Code skill for workflow orchestration. It decomposes complex user prompts into discrete, schema-bound tasks with file-based instruction offloading to prevent context window explosion.
+Charge is a Claude Code skill for workflow orchestration. It decomposes complex user prompts into discrete, schema-bound tasks with file-based instruction offloading to prevent context window explosion.
 
 **This is a pure prompt-based project** - there is no traditional build, test, or lint system. All functionality is implemented through markdown prompt files and JSON schema definitions.
 
 ## Usage
 
-FlowIt is invoked as a Claude Code skill:
+Charge is invoked as a Claude Code skill:
 
 | Command | Description |
 |---------|-------------|
-| `/flowit <prompt>` | Build and run a workflow (default) |
-| `/flowit:build <prompt>` | Build workflow only, with approval flow |
-| `/flowit:run <id>` | Run an existing workflow |
-| `/flowit:inspect <id>` | View workflow structure and status |
-| `/flowit:list` | List all workflows in project |
-| `/flowit:delete <id>` | Delete a workflow |
+| `/charge <prompt>` | Build and run a workflow (default) |
+| `/charge:build <prompt>` | Build workflow only, with approval flow |
+| `/charge:run <id>` | Run an existing workflow |
+| `/charge:inspect <id>` | View workflow structure and status |
+| `/charge:list` | List all workflows in project |
+| `/charge:delete <id>` | Delete a workflow |
 
-Workflows are stored at: `{project}/.flowit/{YY-MM-DD}/{workflow-name}/`
+Workflows are stored at: `{project}/.charge/{YY-MM-DD}/{workflow-name}/`
 
 ## Architecture
 
@@ -72,7 +72,7 @@ This section defines conventions for placeholders, variables, and examples in pr
 
 ### Placeholder Syntax
 
-FlowIt uses distinct placeholder syntaxes for different purposes:
+Charge uses distinct placeholder syntaxes for different purposes:
 
 | Syntax | Purpose | Example |
 | ------ | ------- | ------- |

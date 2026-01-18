@@ -1,4 +1,4 @@
-# Command: /flowit:inspect
+# Command: /charge:inspect
 
 View the structure and status of a workflow.
 
@@ -10,8 +10,8 @@ View the structure and status of a workflow.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.flowit/` directory
-2. If not found, report error and suggest `/flowit:list`
+1. Search for the workflow in `.charge/` directory
+2. If not found, report error and suggest `/charge:list`
 
 ### Step 2: Load Workflow Data
 
@@ -73,8 +73,8 @@ No tasks have been executed yet.
 ---
 
 **Actions**:
-- Run: `/flowit:run {id}`
-- Delete: `/flowit:delete {id}`
+- Run: `/charge:run {id}`
+- Delete: `/charge:delete {id}`
 ```
 
 ## Notes

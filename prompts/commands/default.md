@@ -1,6 +1,6 @@
-# Command: /flowit (default)
+# Command: /charge (default)
 
-Build a workflow from a user prompt AND execute it. This is the default command when `/flowit` is invoked without a subcommand.
+Build a workflow from a user prompt AND execute it. This is the default command when `/charge` is invoked without a subcommand.
 
 ## Input
 
@@ -27,4 +27,4 @@ The combined output includes:
 ## Notes
 
 - This is the most common usage pattern: build + run in one step
-- Users who want to inspect or modify the workflow before running should use `/flowit:build` followed by `/flowit:run`
+- Users who want to inspect or modify the workflow before running should use `/charge:build` followed by `/charge:run`

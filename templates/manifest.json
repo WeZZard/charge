@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "flowit-manifest",
-  "title": "FlowIt Workflow Manifest",
-  "description": "Defines the structure and execution flow of a FlowIt workflow",
+  "$id": "charge-manifest",
+  "title": "Charge Workflow Manifest",
+  "description": "Defines the structure and execution flow of a Charge workflow",
 
   "type": "object",
   "properties": {

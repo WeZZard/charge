@@ -1,17 +1,17 @@
-# FlowIt
+# Charge
 
 A Claude Code skill for workflow orchestration with schema-bound task execution and file-based instruction offloading.
 
 ## Overview
 
-FlowIt decomposes complex user requests into discrete tasks, each with explicit input/output JSON Schema contracts. Tasks communicate only through these schemas, and instructions are stored in files to prevent context window explosion.
+Charge decomposes complex user requests into discrete tasks, each with explicit input/output JSON Schema contracts. Tasks communicate only through these schemas, and instructions are stored in files to prevent context window explosion.
 
 ## Installation
 
 Clone this repository and add it to your Claude Code skills:
 
 ```bash
-git clone https://github.com/your-org/flowit.git
+git clone https://github.com/your-org/charge.git
 ```
 
 Add to your Claude Code configuration as a skill.
@@ -20,19 +20,19 @@ Add to your Claude Code configuration as a skill.
 
 | Command | Description |
 |---------|-------------|
-| `/flowit <prompt>` | Build and run a workflow (default) |
-| `/flowit:build <prompt>` | Build workflow only, with approval flow |
-| `/flowit:run <id>` | Run an existing workflow |
-| `/flowit:inspect <id>` | View workflow structure and status |
-| `/flowit:list` | List all workflows in project |
-| `/flowit:delete <id>` | Delete a workflow |
+| `/charge <prompt>` | Build and run a workflow (default) |
+| `/charge:build <prompt>` | Build workflow only, with approval flow |
+| `/charge:run <id>` | Run an existing workflow |
+| `/charge:inspect <id>` | View workflow structure and status |
+| `/charge:list` | List all workflows in project |
+| `/charge:delete <id>` | Delete a workflow |
 
 ## Quick Start
 
 ```
-> /flowit Build a REST API with user authentication
+> /charge Build a REST API with user authentication
 
-FlowIt analyzing prompt...
+Charge analyzing prompt...
 
 ## Proposed Workflow: build-rest-api-auth
 
@@ -61,7 +61,7 @@ Workflow complete!
 
 ### 1. Workflow Analysis
 
-When you provide a prompt, FlowIt:
+When you provide a prompt, Charge:
 - Decomposes it into discrete tasks
 - Identifies dependencies between tasks
 - Generates JSON Schema contracts for each task's I/O
@@ -83,7 +83,7 @@ Each task:
 
 ### 4. Context Management
 
-FlowIt prevents context explosion by:
+Charge prevents context explosion by:
 - Storing task instructions in separate files
 - Persisting results to disk
 - Injecting summarization tasks when outputs grow large
@@ -93,7 +93,7 @@ FlowIt prevents context explosion by:
 Workflows are stored at:
 
 ```
-{project}/.flowit/{YY-MM-DD}/{workflow-name}/
+{project}/.charge/{YY-MM-DD}/{workflow-name}/
 ├── manifest.json      # Workflow definition
 ├── state.json         # Execution state
 ├── instructions/      # Task instruction files
@@ -104,7 +104,7 @@ Workflows are stored at:
 ## Project Structure
 
 ```
-flowit/
+charge/
 ├── skill.md                    # Main skill entry point
 ├── prompts/
 │   ├── commands/               # Command handlers

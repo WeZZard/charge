@@ -1,4 +1,4 @@
-# FlowIt - Workflow Orchestration Skill
+# Charge - Workflow Orchestration Skill
 
 A pure natural language skill that decomposes user prompts into schema-bound tasks with file-based instruction offloading to prevent context window explosion.
 
@@ -6,48 +6,48 @@ A pure natural language skill that decomposes user prompts into schema-bound tas
 
 | Command | Description |
 | ------- | ----------- |
-| `/flowit <prompt>` | Build workflow from prompt AND run it (default) |
-| `/flowit:build <prompt>` | Build workflow only (don't run) |
-| `/flowit:run <id>` | Run an existing workflow |
-| `/flowit:inspect <id>` | View workflow structure and status |
-| `/flowit:list` | List workflows in current project |
-| `/flowit:delete <id>` | Delete a workflow |
+| `/charge <prompt>` | Build workflow from prompt AND run it (default) |
+| `/charge:build <prompt>` | Build workflow only (don't run) |
+| `/charge:run <id>` | Run an existing workflow |
+| `/charge:inspect <id>` | View workflow structure and status |
+| `/charge:list` | List workflows in current project |
+| `/charge:delete <id>` | Delete a workflow |
 
 ## Command Router
 
 When this skill is invoked, route to the appropriate handler based on the command:
 
-### Route: `/flowit <prompt>` (no subcommand)
+### Route: `/charge <prompt>` (no subcommand)
 
 Load and follow: `prompts/commands/default.md`
 
 This is the default flow that builds a workflow AND runs it.
 
-### Route: `/flowit:build <prompt>`
+### Route: `/charge:build <prompt>`
 
 Load and follow: `prompts/commands/build.md`
 
 Builds a workflow with plan-mode approval but does not execute.
 
-### Route: `/flowit:run <id>`
+### Route: `/charge:run <id>`
 
 Load and follow: `prompts/commands/run.md`
 
 Executes an existing workflow by ID.
 
-### Route: `/flowit:inspect <id>`
+### Route: `/charge:inspect <id>`
 
 Load and follow: `prompts/commands/inspect.md`
 
 Shows workflow structure, tasks, schemas, and execution status.
 
-### Route: `/flowit:list`
+### Route: `/charge:list`
 
 Load and follow: `prompts/commands/list.md`
 
-Lists all workflows in the current project's `.flowit/` directory.
+Lists all workflows in the current project's `.charge/` directory.
 
-### Route: `/flowit:delete <id>`
+### Route: `/charge:delete <id>`
 
 Load and follow: `prompts/commands/delete.md`
 
@@ -58,7 +58,7 @@ Deletes a workflow and its artifacts.
 All workflow artifacts are stored at:
 
 ```ascii
-{project}/.flowit/{YY-MM-DD}/{workflow-name}/
+{project}/.charge/{YY-MM-DD}/{workflow-name}/
 ├── manifest.json          # Workflow definition
 ├── state.json             # Execution state
 ├── instructions/          # Per-task instruction files

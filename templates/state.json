@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "flowit-state",
-  "title": "FlowIt Workflow State",
-  "description": "Tracks the execution state of a FlowIt workflow",
+  "$id": "charge-state",
+  "title": "Charge Workflow State",
+  "description": "Tracks the execution state of a Charge workflow",
 
   "type": "object",
   "properties": {

@@ -106,7 +106,7 @@ If some tasks failed:
 
 ### To Continue
 
-Run `/flowit:run {workflow-name}` to retry failed tasks.
+Run `/charge:run {workflow-name}` to retry failed tasks.
 ```
 
 ## Output Formats

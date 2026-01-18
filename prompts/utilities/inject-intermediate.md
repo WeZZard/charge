@@ -114,6 +114,6 @@ Tasks receiving a reference should:
 ## Notes
 
 - Intermediate tasks are marked with `"injected": true` in manifest
-- Users can see these in `/flowit:inspect` output
+- Users can see these in `/charge:inspect` output
 - Summarization preserves correctness over compression ratio
 - When in doubt, keep more information rather than less

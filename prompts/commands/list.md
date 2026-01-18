@@ -1,4 +1,4 @@
-# Command: /flowit:list
+# Command: /charge:list
 
 List all workflows in the current project.
 
@@ -10,17 +10,17 @@ None required.
 
 ### Step 1: Find Workflows
 
-1. Check if `.flowit/` directory exists in the current project
+1. Check if `.charge/` directory exists in the current project
 2. If not, report:
 
    ```markdown
    No workflows found in this project.
-   Create one with: /flowit <your prompt>
+   Create one with: /charge <your prompt>
    ```
 
 ### Step 2: Scan Workflow Directories
 
-For each date directory in `.flowit/`:
+For each date directory in `.charge/`:
 
 1. List all workflow subdirectories
 2. For each workflow, read `manifest.json` and `state.json`
@@ -47,22 +47,22 @@ Total: {count} workflows
 ---
 
 **Actions**:
-- Inspect: `/flowit:inspect <workflow-name>`
-- Run: `/flowit:run <workflow-name>`
-- Delete: `/flowit:delete <workflow-name>`
+- Inspect: `/charge:inspect <workflow-name>`
+- Run: `/charge:run <workflow-name>`
+- Delete: `/charge:delete <workflow-name>`
 ```
 
 ### Step 4: Handle Empty Results
 
-If `.flowit/` exists but contains no workflows:
+If `.charge/` exists but contains no workflows:
 
 ```markdown
 No workflows found in this project.
-Create one with: /flowit <your prompt>
+Create one with: /charge <your prompt>
 ```
 
 ## Notes
 
 - Group by date for easy temporal navigation
 - Show status with visual indicators if possible
-- Keep the list concise - users can use `/flowit:inspect` for details
+- Keep the list concise - users can use `/charge:inspect` for details

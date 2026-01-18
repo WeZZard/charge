@@ -1,4 +1,4 @@
-# Command: /flowit:run
+# Command: /charge:run
 
 Execute an existing workflow by ID.
 
@@ -10,7 +10,7 @@ Execute an existing workflow by ID.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.flowit/` directory
+1. Search for the workflow in `.charge/` directory
 2. If `id` is a full path, use it directly
 3. If `id` is just a name, search in date-ordered directories (most recent first)
 4. Load `manifest.json` from the workflow directory
@@ -19,7 +19,7 @@ If workflow not found, report error:
 
 ```markdown
 Workflow not found: {id}
-Run /flowit:list to see available workflows.
+Run /charge:list to see available workflows.
 ```
 
 ### Step 2: Load Workflow State

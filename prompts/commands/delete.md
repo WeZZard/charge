@@ -1,4 +1,4 @@
-# Command: /flowit:delete
+# Command: /charge:delete
 
 Delete a workflow and all its artifacts.
 
@@ -10,12 +10,12 @@ Delete a workflow and all its artifacts.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.flowit/` directory
+1. Search for the workflow in `.charge/` directory
 2. If not found, report error:
 
    ```markdown
    Workflow not found: {id}
-   Run /flowit:list to see available workflows.
+   Run /charge:list to see available workflows.
    ```
 
 ### Step 2: Confirm Deletion
@@ -60,8 +60,8 @@ After deleting a workflow:
 
 1. Check if the parent date directory is now empty
 2. If empty, delete the date directory too
-3. Check if `.flowit/` is now empty
-4. If empty, optionally delete `.flowit/` (or leave it for future workflows)
+3. Check if `.charge/` is now empty
+4. If empty, optionally delete `.charge/` (or leave it for future workflows)
 
 ## Safety Notes
 
