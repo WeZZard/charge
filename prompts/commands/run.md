@@ -10,9 +10,9 @@ Execute an existing workflow by ID.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.charge/` directory
+1. Search for the workflow in `.charge/workflows/` directory
 2. If `id` is a full path, use it directly
-3. If `id` is just a name, search in date-ordered directories (most recent first)
+3. If `id` is just a name, search by matching the workflow name suffix (ignoring date prefix)
 4. Load `manifest.json` from the workflow directory
 
 If workflow not found, report error:
@@ -22,11 +22,38 @@ Workflow not found: {id}
 Run /charge:list to see available workflows.
 ```
 
-### Step 2: Load Workflow State
+### Step 2: Get Session ID and Create Execution Directory
 
-1. Read `state.json` to check current status
-2. If status is "completed", ask user if they want to re-run
-3. If status is "failed", show the failure point and ask to continue or restart
+1. Get the Claude Code parent process info via bash:
+   ```bash
+   ps -p $PPID -o lstart,pid | tail -1
+   ```
+2. Parse the output to construct session ID: `{YYYY-MM-DD-hh-mm-ss}-{PPID}`
+   - Example output: `Sun Jan 18 20:34:14 2026 50622`
+   - Session ID: `2026-01-18-20-34-14-50622`
+3. Generate execution timestamp: `{YYYY-MM-DD-hh-mm-ss}` (current UTC time)
+4. Create execution directory: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
+5. Create `results/` subdirectory
+6. Initialize `state.json` with:
+   ```json
+   {
+     "workflow_ref": "workflows/{YYYY-MM-DD}-{workflow-name}",
+     "session_id": "{session_id}",
+     "execution_id": "{execution_timestamp}-{workflow-name}",
+     "status": "running",
+     "current_task": null,
+     "completed_tasks": [],
+     "failed_tasks": [],
+     "results": {},
+     "started_at": "{ISO-timestamp}",
+     "completed_at": null,
+     "error": null
+   }
+   ```
+
+Store both paths for use throughout execution:
+- `workflow_path`: `.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+- `execution_path`: `.charge/sessions/{session_id}/{execution_timestamp}-{workflow-name}/`
 
 ### Step 3: Execute Tasks
 
@@ -86,8 +113,8 @@ When `iteration.strategy` is `parallel`:
 
 After all items complete:
 
-- Collect all item result file paths
-- Create an aggregated result at `results/{task_id}.json` containing:
+- Collect all item result file paths from `{execution_path}/results/`
+- Create an aggregated result at `{execution_path}/results/{task_id}.json` containing:
   ```json
   {
     "items": [
@@ -99,7 +126,7 @@ After all items complete:
     "failed_count": [number]
   }
   ```
-- Update `state.json` with the aggregated result path
+- Update `{execution_path}/state.json` with the aggregated result path
 - Return to Step 3 for the next task
 
 ### Step 5: Execute Regular Task
@@ -110,21 +137,24 @@ For non-template tasks:
 
 DO NOT read any files. Only determine paths:
 
+**Workflow paths** (read-only, from workflow directory):
 - Instruction file: `{workflow_path}/instructions/{task_id}.md`
 - Input schema: `{workflow_path}/schemas/{task_id}_input.json`
 - Output schema: `{workflow_path}/schemas/{task_id}_output.json`
-- Output file: `{workflow_path}/results/{task_id}.json`
-- Dependency results: `{workflow_path}/results/{dep_task_id}.json` for each dependency
+
+**Execution paths** (read-write, from execution directory):
+- Output file: `{execution_path}/results/{task_id}.json`
+- Dependency results: `{execution_path}/results/{dep_task_id}.json` for each dependency
 
 **5.2 Execute Task**
 
 - Follow `prompts/core/execute-task.md`
-- Pass only: workflow path, task ID, list of dependency result paths
+- Pass: workflow path, execution path, task ID, list of dependency result paths
 - The sub-agent will read all files itself
 
 **5.3 Handle Response**
 
-- On success: update `state.json` with completed task
+- On success: update `{execution_path}/state.json` with completed task
 - On failure: retry up to 2 times, then pause for user guidance
 
 **5.4 Report Progress**
@@ -139,15 +169,16 @@ Return to Step 3 for the next task.
 
 After all tasks complete:
 
-1. Follow `prompts/core/synthesize.md` to combine task outputs
+1. Follow `prompts/core/synthesize.md` to combine task outputs from `{execution_path}/results/`
 2. Present the final result to the user
-3. Update `state.json` status to "completed"
+3. Update `{execution_path}/state.json` status to "completed"
 
 ## Output Format
 
 ```markdown
 Executing workflow: {workflow-name}
-Location: {workflow-path}
+Workflow: {workflow_path}
+Session: {execution_path}
 
 [1/3] discover-items... done
 [2/3] process-item [1/10]... done
@@ -157,7 +188,7 @@ Location: {workflow-path}
 [3/3] aggregate-results... done
 
 Workflow complete.
-Results saved to: {workflow-path}/results/
+Results saved to: {execution_path}/results/
 
 ---
 {Synthesized final output}

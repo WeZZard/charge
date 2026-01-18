@@ -5,7 +5,8 @@ Execute a single task within a workflow by delegating to a sub-agent.
 ## Input
 
 - `task`: The task definition from manifest
-- `workflow_path`: Absolute path to the workflow directory
+- `workflow_path`: Absolute path to the workflow directory (contains instructions, schemas)
+- `execution_path`: Absolute path to the execution directory (contains state.json, results)
 - `input_source`: For template tasks, the file path or reference to process
 - `item_index` (optional): For template tasks, the current item index
 - `total_items` (optional): For template tasks, total number of items
@@ -22,11 +23,14 @@ The main agent should NOT read:
 
 Instead, only determine **file paths** to pass to the sub-agent.
 
-**Key paths:**
+**Workflow paths** (read-only):
 - Instruction: `{workflow_path}/instructions/{task_id}.md`
 - Input schema: `{workflow_path}/schemas/{task_id}_input.json`
 - Output schema: `{workflow_path}/schemas/{task_id}_output.json`
-- Output file: `{workflow_path}/results/{task_id}.json`
+
+**Execution paths** (read-write):
+- Output file: `{execution_path}/results/{task_id}.json`
+- Dependency results: `{execution_path}/results/{dep_task_id}.json`
 
 ### Step 2: Execute with Task Tool
 
@@ -41,16 +45,17 @@ Task(
   prompt: "
     # Charge Task Execution
 
-    Workflow: {workflow-path}
+    Workflow: {workflow_path}
+    Execution: {execution_path}
     Task ID: {task-id}
 
     ## Step 1: Read Instructions
     Read the instruction file at:
-    {workflow-path}/instructions/{task-id}.md
+    {workflow_path}/instructions/{task-id}.md
 
     ## Step 2: Read Input
     Read previous task results from:
-    {workflow-path}/results/
+    {execution_path}/results/
 
     Relevant result files: {list of dependency result files}
 
@@ -59,15 +64,15 @@ Task(
 
     ## Step 4: Write Output
     Write your JSON output to:
-    {workflow-path}/results/{task-id}.json
+    {execution_path}/results/{task-id}.json
 
     Your output must match the schema at:
-    {workflow-path}/schemas/{task-id}_output.json
+    {workflow_path}/schemas/{task-id}_output.json
 
     ## Step 5: Report Status
     After writing the file, respond with ONLY:
 
-    {\"status\": \"success\", \"output_path\": \"{workflow-path}/results/{task-id}.json\"}
+    {\"status\": \"success\", \"output_path\": \"{execution_path}/results/{task-id}.json\"}
 
     If you encounter an error:
 
@@ -85,13 +90,14 @@ Task(
   prompt: "
     # Charge Task Execution
 
-    Workflow: {workflow-path}
+    Workflow: {workflow_path}
+    Execution: {execution_path}
     Task ID: {task-id}
     Item: {item-index} of {total-items}
 
     ## Step 1: Read Instructions
     Read the instruction file at:
-    {workflow-path}/instructions/{task-id}.md
+    {workflow_path}/instructions/{task-id}.md
 
     ## Step 2: Read Input
     Read the source file at:
@@ -102,15 +108,15 @@ Task(
 
     ## Step 4: Write Output
     Write your JSON output to:
-    {workflow-path}/results/{task-id}_item_{item-index:02d}.json
+    {execution_path}/results/{task-id}_item_{item-index:02d}.json
 
     Your output must match the schema at:
-    {workflow-path}/schemas/{task-id}_output.json
+    {workflow_path}/schemas/{task-id}_output.json
 
     ## Step 5: Report Status
     After writing the file, respond with ONLY:
 
-    {\"status\": \"success\", \"output_path\": \"{workflow-path}/results/{task-id}_item_{item-index:02d}.json\"}
+    {\"status\": \"success\", \"output_path\": \"{execution_path}/results/{task-id}_item_{item-index:02d}.json\"}
 
     If you encounter an error:
 
@@ -145,10 +151,10 @@ Process the status:
 
 ### Step 4: Update State
 
-Update `state.json`:
+Update `{execution_path}/state.json`:
 
 - Add task_id to `completed_tasks`
-- Add result path to `results`
+- Add result path to `results` (relative to execution directory)
 - Update `current_task` to next task (or null if done)
 
 **For template task iterations**:

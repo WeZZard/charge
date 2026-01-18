@@ -1,14 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "charge-state",
-  "title": "Charge Workflow State",
-  "description": "Tracks the execution state of a Charge workflow",
+  "title": "Charge Execution State",
+  "description": "Tracks the execution state of a workflow run. Stored in .charge/sessions/{session_id}/{execution_id}/",
 
   "type": "object",
   "properties": {
-    "workflow_id": {
+    "workflow_ref": {
       "type": "string",
-      "description": "Reference to the workflow this state belongs to"
+      "description": "Relative path to the workflow directory (e.g., 'workflows/2026-01-18-build-api')"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session directory name derived from Claude Code process (e.g., '2026-01-18-20-34-14-50622')"
+    },
+    "execution_id": {
+      "type": "string",
+      "description": "Execution directory name with timestamp and workflow name (e.g., '2026-01-18-14-30-15-build-api')"
     },
     "status": {
       "type": "string",
@@ -70,5 +78,5 @@
     }
   },
 
-  "required": ["workflow_id", "status", "completed_tasks", "failed_tasks", "results"]
+  "required": ["workflow_ref", "session_id", "execution_id", "status", "completed_tasks", "failed_tasks", "results"]
 }

@@ -1,3 +1,9 @@
+---
+name: charge
+description: Workflow orchestration for complex multi-step tasks. Decomposes prompts into discrete, schema-bound tasks with file-based instruction offloading. Use when a task requires multiple coordinated steps, batch processing, or would benefit from isolated sub-agent execution.
+user-invocable: true
+---
+
 # Charge - Workflow Orchestration Skill
 
 A pure natural language skill that decomposes user prompts into schema-bound tasks with file-based instruction offloading to prevent context window explosion.
@@ -55,16 +61,28 @@ Deletes a workflow and its artifacts.
 
 ## Storage Convention
 
-All workflow artifacts are stored at:
+Charge separates workflow definitions from execution results:
+
+### Workflow Definitions (Reusable)
 
 ```ascii
-{project}/.charge/{YYYY-MM-DD}/{workflow-name}/
+{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
 ├── manifest.json          # Workflow definition
-├── state.json             # Execution state
 ├── instructions/          # Per-task instruction files
-├── schemas/               # JSON Schema files for task I/O
+└── schemas/               # JSON Schema files for task I/O
+```
+
+### Execution Sessions (Per-Session)
+
+```ascii
+{project}/.charge/sessions/{start-timestamp}-{PPID}/{YYYY-MM-DD-hh-mm-ss}-{workflow-name}/
+├── state.json             # Execution state
 └── results/               # Task output files
 ```
+
+**Session ID**: Derived from Claude Code parent process (`{start-timestamp}-{PPID}`).
+
+**Management**: Use basic UNIX commands (`ls`, `rm -rf`) to manage sessions.
 
 ## Core Principles
 

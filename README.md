@@ -1,53 +1,57 @@
 # Charge
 
-A Claude Code skill for workflow orchestration with schema-bound task execution and file-based instruction offloading.
+**Workflow orchestration for Claude Code** — Decompose complex prompts into schema-bound tasks with automatic context management.
 
-## Overview
+## Why Charge?
 
-Charge decomposes complex user requests into discrete tasks, each with explicit input/output JSON Schema contracts. Tasks communicate only through these schemas, and instructions are stored in files to prevent context window explosion.
+Claude Code is powerful, but complex tasks can exhaust the context window. Charge solves this by:
+
+- **Decomposing** prompts into discrete, focused tasks
+- **Isolating** each task in its own sub-agent context
+- **Validating** data flow through JSON Schema contracts
+- **Persisting** results to files instead of memory
+
+The result: reliable execution of multi-step workflows without context explosion.
 
 ## Installation
 
-Clone this repository and add it to your Claude Code skills:
+### As a Claude Code Plugin
 
 ```bash
-git clone https://github.com/your-org/charge.git
+# Add the marketplace (one-time setup)
+/plugin marketplace add WeZZard/charge
+
+# Install the skill
+/plugin install charge
 ```
 
-Add to your Claude Code configuration as a skill.
+### Manual Installation
 
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/charge <prompt>` | Build and run a workflow (default) |
-| `/charge:build <prompt>` | Build workflow only, with approval flow |
-| `/charge:run <id>` | Run an existing workflow |
-| `/charge:inspect <id>` | View workflow structure and status |
-| `/charge:list` | List all workflows in project |
-| `/charge:delete <id>` | Delete a workflow |
+```bash
+# Clone to your plugins directory
+git clone https://github.com/WeZZard/charge.git ~/.claude/plugins/charge
+```
 
 ## Quick Start
 
 ```
 > /charge Build a REST API with user authentication
 
-Charge analyzing prompt...
+Analyzing prompt...
 
-## Proposed Workflow: build-rest-api-auth
+Proposed Workflow: build-rest-api-auth
 
-Tasks:
-  1. parse-requirements
-  2. design-api-schema
-  3. implement-endpoints
-  4. add-authentication
-  5. generate-tests
+  1. parse-requirements     Extract API requirements from prompt
+  2. design-api-schema      Create OpenAPI specification
+  3. implement-endpoints    Generate route handlers
+  4. add-authentication     Implement auth middleware
+  5. generate-tests         Create test files
 
-Do you approve this workflow?
+Approve this workflow? [Y/n]
 
-> Approve
+> Y
 
-Workflow created and executing...
+Executing workflow...
 [1/5] parse-requirements... done
 [2/5] design-api-schema... done
 [3/5] implement-endpoints... done
@@ -57,111 +61,180 @@ Workflow created and executing...
 Workflow complete!
 ```
 
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `/charge <prompt>` | Build and run a workflow |
+| `/charge:build <prompt>` | Build workflow only (review before running) |
+| `/charge:run <id>` | Run an existing workflow |
+| `/charge:inspect <id>` | View workflow structure and status |
+| `/charge:list` | List all workflows in project |
+| `/charge:delete <id>` | Delete a workflow |
+
 ## How It Works
 
-### 1. Workflow Analysis
+### 1. Prompt Analysis
 
-When you provide a prompt, Charge:
-- Decomposes it into discrete tasks
-- Identifies dependencies between tasks
-- Generates JSON Schema contracts for each task's I/O
+Charge analyzes your prompt to identify:
+- Primary goals and secondary objectives
+- Task boundaries and dependencies
+- Repetitive patterns that can be parallelized
 
-### 2. Plan Mode Approval
+### 2. Workflow Generation
 
-Before execution, you review and approve the workflow:
-- See all tasks and their purpose
-- Provide feedback to refine the workflow
-- Approve when satisfied
+Each task gets:
+- **Instruction file** — Markdown guidance for the sub-agent
+- **Input schema** — JSON Schema defining expected input
+- **Output schema** — JSON Schema defining required output
 
-### 3. Task Execution
+### 3. Isolated Execution
 
-Each task:
-- Loads only its instruction file (minimal context)
-- Receives input validated against its input schema
-- Produces output validated against its output schema
-- Results are saved to files, not kept in context
+Tasks run in separate sub-agent contexts:
+```
+Main Agent                    Sub-Agent (Task 1)
+    │                              │
+    ├─► Pass file paths ──────────►│
+    │                              ├─► Read instruction
+    │                              ├─► Read input data
+    │                              ├─► Execute task
+    │                              ├─► Write output file
+    │◄── Return status ◄───────────┤
+    │
+    ├─► Pass file paths ──────────► Sub-Agent (Task 2)
+    ...
+```
 
-### 4. Context Management
+The main agent passes **paths, not content** — sub-agents read their own files. This keeps the orchestrator's context minimal.
 
-Charge prevents context explosion by:
-- Storing task instructions in separate files
-- Persisting results to disk
-- Injecting summarization tasks when outputs grow large
+### 4. Template Tasks
+
+For repetitive operations, Charge creates template tasks that iterate over collections:
+
+```
+> /charge Review all blog posts in the content/ directory
+
+[1/3] discover-posts... done
+[2/3] review-post [1/15]... done
+[2/3] review-post [2/15]... done
+...
+[2/3] review-post [15/15]... done
+[3/3] aggregate-feedback... done
+```
+
+Template tasks can run **sequentially** or **in parallel** depending on whether items are independent.
 
 ## Workflow Storage
 
-Workflows are stored at:
+Charge separates workflow definitions from execution results:
 
+### Workflow Definitions
 ```
-{project}/.charge/{YYYY-MM-DD}/{workflow-name}/
-├── manifest.json      # Workflow definition
-├── state.json         # Execution state
-├── instructions/      # Task instruction files
-├── schemas/           # JSON Schema files
-└── results/           # Task output files
+{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/
+├── manifest.json           # Workflow definition
+├── instructions/           # Per-task instruction files
+│   ├── task_01.md
+│   └── task_02.md
+└── schemas/                # JSON Schema contracts
+    ├── task_01_input.json
+    └── ...
 ```
 
-## Project Structure
+### Execution Results
+```
+{project}/.charge/sessions/{session_id}/{timestamp}-{workflow-name}/
+├── state.json              # Execution state
+└── results/                # Task outputs
+    ├── task_01.json
+    └── task_02.json
+```
+
+This separation enables:
+- **Workflow reuse** — Run the same workflow multiple times
+- **Session isolation** — Each Claude Code session has its own result space
+- **History tracking** — Review past executions without collision
+
+Use basic UNIX commands (`ls`, `rm -rf`) to manage sessions.
+
+## Use Cases
+
+**Code Generation**
+```
+/charge Build a GraphQL API for a todo app with TypeScript
+```
+
+**Refactoring**
+```
+/charge Refactor the payment module to use the strategy pattern
+```
+
+**Batch Processing**
+```
+/charge Analyze all Python files in src/ for security vulnerabilities
+```
+
+**Documentation**
+```
+/charge Generate API documentation from the OpenAPI spec
+```
+
+**Migration**
+```
+/charge Migrate all database models to the new ORM syntax
+```
+
+## Architecture
 
 ```
 charge/
-├── skill.md                    # Main skill entry point
+├── SKILL.md                    # Skill entry point
 ├── prompts/
 │   ├── commands/               # Command handlers
-│   │   ├── default.md
-│   │   ├── build.md
-│   │   ├── run.md
-│   │   ├── inspect.md
-│   │   ├── list.md
-│   │   └── delete.md
-│   ├── core/                   # Core logic
-│   │   ├── analyze-workflow.md
-│   │   ├── generate-schemas.md
-│   │   ├── build-flow.md
-│   │   ├── execute-task.md
-│   │   └── synthesize.md
+│   │   ├── default.md          # /charge (build + run)
+│   │   ├── build.md            # /charge:build
+│   │   ├── run.md              # /charge:run
+│   │   ├── inspect.md          # /charge:inspect
+│   │   ├── list.md             # /charge:list
+│   │   └── delete.md           # /charge:delete
+│   ├── core/                   # Core orchestration
+│   │   ├── analyze-workflow.md # Prompt decomposition
+│   │   ├── generate-schemas.md # Schema generation
+│   │   ├── build-flow.md       # Execution planning
+│   │   ├── execute-task.md     # Task execution
+│   │   └── synthesize.md       # Result aggregation
 │   └── utilities/
 │       └── inject-intermediate.md
 ├── templates/                  # File templates
-│   ├── task-instruction.md
-│   ├── manifest.json
-│   └── state.json
 └── examples/                   # Example workflows
-    └── simple-api-workflow/
 ```
 
-## Key Concepts
+## Design Principles
 
-### Schema-Only Communication
+1. **Schema-Only Communication** — Tasks exchange data through validated JSON, not shared context
+2. **Lazy Loading** — Only the current task's instruction is loaded
+3. **File Offloading** — Instructions, schemas, and results live on disk
+4. **Plan Mode Approval** — Review and approve before execution
+5. **Graceful Retry** — Failed tasks retry with error feedback
 
-Tasks don't share context directly. Instead:
-- Each task has explicit input and output schemas
-- Data flows through validated JSON structures
-- This ensures predictable, debuggable execution
+## Context Management
 
-### File-Based Offloading
+Charge automatically manages context size:
 
-To prevent context overflow:
-- Task instructions live in markdown files
-- Results are persisted to JSON files
-- Only the current task's context is loaded
+| Condition | Action |
+|-----------|--------|
+| Single output > 4000 tokens | Chunk to file, pass reference |
+| Cumulative results > 8000 tokens | Inject summarization task |
+| Task count > 10 | Add checkpoint summarization |
 
-### Approval Flow
+## Contributing
 
-Before execution, you see:
-- All proposed tasks
-- Their inputs and outputs
-- The execution order
-
-You can:
-- Approve to proceed
-- Provide feedback to refine
-
-## Version
-
-- Version: 1.0
-- Schema Version: 1.0
+Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## License
 
 MIT
+
+## Version
+
+- Skill Version: 1.0
+- Schema Version: 1.0

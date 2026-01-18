@@ -21,7 +21,9 @@ Charge is invoked as a Claude Code skill:
 | `/charge:list` | List all workflows in project |
 | `/charge:delete <id>` | Delete a workflow |
 
-Workflows are stored at: `{project}/.charge/{YYYY-MM-DD}/{workflow-name}/`
+**Storage Structure:**
+- Workflows: `{project}/.charge/workflows/{YYYY-MM-DD}-{workflow-name}/`
+- Sessions: `{project}/.charge/sessions/{start-timestamp}-{PPID}/{execution-timestamp}-{workflow-name}/`
 
 ## Architecture
 
@@ -54,11 +56,14 @@ skill.md → prompts/commands/*.md → prompts/core/*.md → workflow execution
 
 ### Data Structures
 
-**Manifest** (`manifest.json`): Workflow definition with tasks, flow order, and data mappings between tasks
+**In Workflow Directory** (`.charge/workflows/{date}-{name}/`):
+- **Manifest** (`manifest.json`): Workflow definition with tasks, flow order, and data mappings
+- **Instructions** (`instructions/{task_id}.md`): Per-task instruction files
+- **Schemas** (`schemas/{task_id}_input.json`, `schemas/{task_id}_output.json`): JSON Schema contracts
 
-**State** (`state.json`): Runtime execution state tracking completed/failed tasks and results
-
-**Task Definition**: Each task has an instruction file (`instructions/{task_id}.md`) and input/output schemas (`schemas/{task_id}_input.json`, `schemas/{task_id}_output.json`)
+**In Execution Directory** (`.charge/sessions/{session_id}/{execution_id}/`):
+- **State** (`state.json`): Runtime execution state with `workflow_ref`, `session_id`, `execution_id`
+- **Results** (`results/{task_id}.json`): Task output files
 
 ### Context Management
 

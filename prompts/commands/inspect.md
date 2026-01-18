@@ -1,6 +1,6 @@
 # Command: /charge:inspect
 
-View the structure and status of a workflow.
+View the structure of a workflow definition.
 
 ## Input
 
@@ -10,15 +10,15 @@ View the structure and status of a workflow.
 
 ### Step 1: Locate the Workflow
 
-1. Search for the workflow in `.charge/` directory
-2. If not found, report error and suggest `/charge:list`
+1. Search for the workflow in `.charge/workflows/` directory
+2. If `id` is just a name, search by matching the workflow name suffix (ignoring date prefix)
+3. If not found, report error and suggest `/charge:list`
 
 ### Step 2: Load Workflow Data
 
 Read from the workflow directory:
 
 - `manifest.json` - workflow definition
-- `state.json` - execution state
 
 ### Step 3: Present Workflow Information
 
@@ -27,20 +27,18 @@ Display the workflow details in this format:
 ```markdown
 ## Workflow: {name}
 
-**ID**: {id}
-**Location**: {path}
-**Created**: {created timestamp}
-**Status**: {pending | running | completed | failed}
+**Location**: .charge/workflows/{YYYY-MM-DD}-{name}/
+**Created**: {created timestamp from directory name}
 **Schema Version**: {schema_version}
 
 ---
 
 ### Tasks ({count} total)
 
-| # | Task | Status | Input Schema | Output Schema |
-|---|------|--------|--------------|---------------|
-| 1 | {name} | {status} | {schema file} | {schema file} |
-| 2 | {name} | {status} | {schema file} | {schema file} |
+| # | Task | Description | Complexity | Output Size |
+|---|------|-------------|------------|-------------|
+| 1 | {name} | {description} | {complexity} | {output_size} |
+| 2 | {name} | {description} | {complexity} | {output_size} |
 | ... | ... | ... | ... | ... |
 
 ---
@@ -57,28 +55,24 @@ Parallel Groups:
 
 ---
 
-### Results
+### Files
 
-{If completed tasks exist:}
-Completed task results are in: {path}/results/
-
-| Task | Result File | Size |
-|------|-------------|------|
-| {name} | results/{task_id}.json | {size} |
-| ... | ... | ... |
-
-{If no completed tasks:}
-No tasks have been executed yet.
+| Directory | Contents |
+|-----------|----------|
+| instructions/ | {count} task instruction files |
+| schemas/ | {count} schema files |
 
 ---
 
 **Actions**:
-- Run: `/charge:run {id}`
-- Delete: `/charge:delete {id}`
+- Run: `/charge:run {name}`
+- Delete: `/charge:delete {name}`
+
+**Execution History**: Use `ls .charge/sessions/` to view past executions.
 ```
 
 ## Notes
 
 - This is a read-only command - it doesn't modify anything
-- Show file sizes to help users understand output volumes
-- Highlight failed tasks if the workflow status is "failed"
+- Workflow definitions do not include execution state (that's in sessions)
+- Use `ls .charge/sessions/{session_id}/` to find execution results

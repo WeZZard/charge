@@ -4,15 +4,16 @@ Combine task outputs into a coherent final result for the user.
 
 ## Input
 
-- `manifest`: The workflow manifest
-- `results`: All task result files (from `results/` directory)
+- `manifest`: The workflow manifest (from workflow directory)
+- `execution_path`: Path to the execution directory
+- `results`: All task result files (from `{execution_path}/results/`)
 - `original_prompt`: The user's original request
 
 ## Process
 
 ### Step 1: Load All Results
 
-Read each result file from `results/{task_id}.json` and extract the output data.
+Read each result file from `{execution_path}/results/{task_id}.json` and extract the output data.
 
 ### Step 2: Understand the Original Goal
 
