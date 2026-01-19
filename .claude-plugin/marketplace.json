@@ -1,0 +1,10 @@
+{
+  "name": "charge",
+  "plugins": [
+    {
+      "name": "charge",
+      "source": "./",
+      "description": "Workflow orchestration for Claude Code"
+    }
+  ]
+}
