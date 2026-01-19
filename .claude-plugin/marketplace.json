@@ -1,10 +1,15 @@
 {
   "name": "charge",
+  "description": "Workflow orchestration for Claude Code",
+  "owner": {
+    "name": "WeZZard",
+    "email": "user@wezzard.com"
+  },
   "plugins": [
     {
       "name": "charge",
       "source": "./",
-      "description": "Workflow orchestration for Claude Code"
+      "description": "Decompose complex prompts into schema-bound tasks with automatic context management"
     }
   ]
 }
