@@ -1,6 +1,6 @@
 {
   "name": "charge",
-  "description": "Workflow orchestration for Claude Code",
+  "description": "Agents charge into your work",
   "owner": {
     "name": "WeZZard",
     "email": "me@wezzard.com"
@@ -9,7 +9,7 @@
     {
       "name": "charge",
       "source": "./",
-      "description": "Decompose complex prompts into schema-bound tasks with automatic context management"
+      "description": "Unleash a charge of sub-agents — they rush in, break down complexity, and conquer your tasks"
     }
   ]
 }
